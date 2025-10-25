@@ -1,0 +1,22 @@
+# -------- CORE TEXT EXTRACTION --------
+pymupdf==1.22.5          # For fast, accurate PDF text extraction
+python-docx==0.8.11      # For extracting text from DOCX resumes
+pillow==10.2.0           # For image processing (used in OCR)
+pytesseract==0.3.10      # For OCR (image/pdf scanned resumes)
+
+# -------- OPTIONAL OCR IMPROVEMENTS --------
+opencv-python==4.10.0.84 # For advanced preprocessing (noise removal, resizing)
+pdfplumber==0.10.3       # Optional PDF text extractor for structured text
+
+# -------- EVALUATION + UTILITIES --------
+pandas==2.2.3            # For tabular evaluation reports
+numpy==1.26.4            # For numerical operations
+tqdm==4.66.4             # For progress bars during batch extraction
+
+# -------- VECTOR DB + EMBEDDINGS (for later RAG) --------
+faiss-cpu==1.8.0         # For efficient vector similarity search
+sentence-transformers==3.2.1  # For generating resume embeddings
+
+# -------- GENERAL UTILITIES --------
+python-dotenv==1.0.1     # For managing environment variables
+loguru==0.7.2            # For structured logging
