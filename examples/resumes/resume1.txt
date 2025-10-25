@@ -1,0 +1,55 @@
+ARJUN HAREESH S
+AI AND BI DEVELOPER
+PROFILE
+II’m a student passionate about AI and BI, exploring how artificial
+CONTACT
+intelligence can transform industries and how business
+intelligence tools drive data-driven decisions. I'm excited to learn
++91 6383876196
+and apply new technologies to solve real-world problems and
+contribute to innovations in these fields.
+arjunhareeshsenthil@gmail.com
+tamilnadu,India PROJECTS
+www.linkedin.com/in/arjun
+Real time resume score analyser
+hareesh25
+https://github.com/arjunha It analysis the real time score of a resume uploaded
+it is built using python language
+reeshs
+webframeworks are streamlit and SQLlite
+TECH SKILLS
+Hand sign preedictor
+c programming
+It analysis the sign and report what it is.
+c ++ (basics) it is built using python language and YOLOv8 model
+webframeworks are gradio and SQLlite
+python
+Text generator
+java (basics)
+It generates text using a transformer model
+Data strucutres
+it is built using python language ,tennsorflow and pytorch
+microsoft (excel , powerpoint) webframeworks are gradio and SQLlite
+data science Image classifier
+machine learning It classifies image of butterfly using CNN
+it is built using python language ,tennsorflow and pytorch
+deeplearning
+webframeworks are gradio and SQLlite
+web development
+CERTIFICATIONS
+SOFT SKILLS
+Certified by Avinash Academy on C,C++,python basics
+Teamwork
+NPTEL :Buisness fundamentals for entrepeuners
+Time Management
+EDUCATION
+Leadership
+school : M.S . Vidyalaya Matriculation school 2011 - 2024
+Critical Thinking
+percentage : 93 % (10 th std)
+LANGUAGES percentage : 90 % (12 th std)
+Bannri amman institute of technology 2024 - 2026
+English
+degree : B.TECH - Artificial intelligence and data science
+Tamil
+cGPA: 8.28

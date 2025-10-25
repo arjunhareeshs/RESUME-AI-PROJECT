@@ -1,3 +1,5 @@
+# extractor/parser.py
+
 import re
 from typing import Dict, Any, List
 
@@ -8,45 +10,60 @@ class ResumeParser:
     """
 
     def __init__(self):
-        # Dictionary for fixing common typos
+        """Initializes typo maps and section regex."""
         self.TYPO_MAP = {
             "data strucutres": "Data Structures",
             "tennsorflow": "tensorflow",
             "buisness": "Business",
-            "prediector": "predictor", # Typo from your sample
-            "bannri amman": "Bannari Amman", # Typo from your sample
+            "prediector": "predictor",
+            "bannri amman": "Bannari Amman",
+            "entrepeuners": "entrepreneurs",
         }
         
-        # Regex for finding section headers
-        # This looks for headers (like 'EDUCATION') that are likely on their own line
         self.SECTION_HEADERS = [
             "PROFILE", "CONTACT", "TECH SKILLS", "SOFT SKILLS", 
             "LANGUAGES", "PROJECTS", "EDUCATION", "CERTIFICATIONS"
         ]
+        
+        # This regex finds headers to split the text on
         self.SECTION_REGEX = re.compile(
-            r"^\s*(" + "|".join(self.SECTION_HEADERS) + r")\s*$",
-            re.MULTILINE | re.IGNORECASE
+            r'\b(' + '|'.join(self.SECTION_HEADERS) + r')\b',
+            re.IGNORECASE
         )
 
     def _clean_text(self, text: str) -> str:
-        """Fixes low-level text errors."""
+        """Fixes low-level text errors like missing spaces and typos."""
         
         # 1. Fix broken LinkedIn/GitHub links
-        # (e.g., "github.com/arjunha\nreeshs" -> "github.com/arjunhareeshs")
         text = re.sub(
             r'(\b(?:linkedin\.com/in|github\.com)/[a-zA-Z0-9_-]+)\n([a-zA-Z0-9_-]+)',
             r'\1\2',
             text
         )
         
-        # 2. Fix known typos
+        # 2. Insert missing spaces
+        text = re.sub(r'([0-9])([a-zA-Z])', r'\1 \2', text)
+        text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)
+        text = re.sub(r'(\.(?:com|in|org|net))([a-zA-Z])', r'\1 \2', text, flags=re.IGNORECASE)
+        text = re.sub(r'([a-zA-Z])(https?|www)', r'\1 \2', text, flags=re.IGNORECASE)
+        
+        # 3. Fix known typos
         for bad, good in self.TYPO_MAP.items():
             text = re.sub(rf'\b{bad}\b', good, text, flags=re.IGNORECASE)
             
-        # 3. Collapse excessive newlines
+        # 4. Forcibly add newlines around headers to separate sections
+        for header in self.SECTION_HEADERS:
+            text = re.sub(
+                rf'\b({header})\b',
+                r'\n\n\1\n\n',
+                text,
+                flags=re.IGNORECASE
+            )
+            
+        # 5. Collapse excessive newlines
         text = re.sub(r'\n{3,}', '\n\n', text)
         
-        # 4. Remove form feed character (often at end of PDF page)
+        # 6. Remove form feed character
         text = text.replace('\f', '')
         
         return text.strip()
@@ -55,28 +72,33 @@ class ResumeParser:
         """Splits the full text into a dictionary of sections."""
         sections = {}
         
-        # Find all section headers
-        matches = list(self.SECTION_REGEX.finditer(text))
+        # This regex looks for headers on their own line
+        section_regex = re.compile(
+            r"^\s*(" + "|".join(self.SECTION_HEADERS) + r")\s*$",
+            re.MULTILINE | re.IGNORECASE
+        )
+
+        matches = list(section_regex.finditer(text))
         
         if not matches:
-            # If no headers found, return all text under a 'general' key
-            return {"GENERAL": text}
+            sections["GENERAL"] = text
+            return sections
 
+        # Extract content between headers
         for i, match in enumerate(matches):
             section_name = match.group(1).upper()
-            
-            # Start position of the section content
             start_pos = match.end()
-            
-            # End position of the section content
             end_pos = matches[i + 1].start() if i + 1 < len(matches) else len(text)
-            
             section_content = text[start_pos:end_pos].strip()
             
-            # Clean up content (remove leading/trailing newlines)
-            section_content = re.sub(r'^\n+|\n+$', '', section_content)
-            
-            sections[section_name] = section_content
+            if section_content:
+                sections[section_name] = section_content
+        
+        # Capture text before the first header
+        first_header_start = matches[0].start()
+        header_content = text[:first_header_start].strip()
+        if header_content:
+            sections["HEADER"] = header_content
             
         return sections
 
@@ -84,45 +106,55 @@ class ResumeParser:
         """Extracts specific data points from the section text."""
         parsed_data = {}
         
-        if "CONTACT" in sections:
-            contact_text = sections["CONTACT"]
-            parsed_data["contact"] = {
-                "email": re.search(r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', contact_text),
-                "phone": re.search(r'(\+91[\s-]?\d{10})', contact_text),
-                "linkedin": re.search(r'(linkedin\.com/in/[^\s]+)', contact_text),
-                "github": re.search(r'(github\.com/[^\s]+)', contact_text)
-            }
-            # Convert match objects to strings, or None if not found
-            for key, match in parsed_data["contact"].items():
-                parsed_data["contact"][key] = match.group(1) if match else None
+        # Join all text with newlines to find contact info
+        all_text = "\n".join(sections.values())
+        
+        # --- Precise Regex Patterns ---
+        email_pattern = r'\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(?:com|org|net|edu|gov|io|in))\b'
+        phone_pattern = r'(\+91[\s-]?\d{10})\b'
+        linkedin_pattern = r'\b((?:www\.)?linkedin\.com/in/[a-zA-Z0-9_-]+)\b'
+        github_pattern = r'\b((?:https?://)?github\.com/[a-zA-Z0-9_-]+)\b'
+
+        parsed_data["contact"] = {
+            "email": self._find_entity(email_pattern, all_text),
+            "phone": self._find_entity(phone_pattern, all_text),
+            "linkedin": self._find_entity(linkedin_pattern, all_text),
+            "github": self._find_entity(github_pattern, all_text)
+        }
         
         if "EDUCATION" in sections:
             edu_text = sections["EDUCATION"]
             parsed_data["education"] = {
-                "cgpa": re.search(r'cGPA:\s*([0-9.]+)', edu_text),
-                "10th_perc": re.search(r'(\d+)[\s%]+.*?10th', edu_text),
-                "12th_perc": re.search(r'(\d+)[\s%]+.*?12th', edu_text)
+                "cgpa": self._find_entity(r'cGPA:\s*([0-9.]+)', edu_text),
+                "10th_perc": self._find_entity(r'(\d+)[\s%]+.*?10th', edu_text),
+                "12th_perc": self._find_entity(r'(\d+)[\s%]+.*?12th', edu_text)
             }
-            for key, match in parsed_data["education"].items():
-                parsed_data["education"][key] = match.group(1) if match else None
         
-        # You can add extractors for "PROJECTS", "SKILLS", etc.
-        
+        # Add other sections as lists or single strings
+        for section in ["PROFILE", "PROJECTS", "TECH SKILLS", "SOFT SKILLS", "CERTIFICATIONS", "LANGUAGES"]:
+            if section in sections:
+                content = sections[section].strip()
+                items = [item.strip() for item in content.split('\n') if item.strip()]
+                
+                if len(items) <= 1:
+                    parsed_data[section.lower()] = content
+                else:
+                    parsed_data[section.lower()] = items
+
         return parsed_data
 
+    def _find_entity(self, pattern: str, text: str) -> str | None:
+        """Helper to find regex match or return None (case-insensitive)."""
+        match = re.search(pattern, text, re.IGNORECASE)
+        return match.group(1) if match else None
+
     def parse(self, raw_text: str) -> Dict[str, Any]:
-        """Main method to clean, parse, and structure the resume text."""
-        
-        # 1. Clean the text
+        """
+        Main method to clean, parse, and structure the resume text.
+        """
         cleaned_text = self._clean_text(raw_text)
-        
-        # 2. Split into sections
         sections = self._parse_sections(cleaned_text)
-        
-        # 3. Extract specific entities
         structured_data = self._extract_entities(sections)
-        
-        # Add the raw sections for context
         structured_data["_raw_sections"] = sections
         
         return structured_data

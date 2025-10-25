@@ -9,7 +9,7 @@ from pdfminer.high_level import extract_text_to_fp
 from pdfminer.layout import LAParams
 # ------------------------------------
 
-import fitz
+import fitz  # PyMuPDF (Still needed for the OCR fallback)
 from PIL import Image
 import pytesseract
 import docx
@@ -52,12 +52,12 @@ class ResumeExtractor:
 
     def _extract_pdf(self, path: Path) -> ExtractionResult:
         """
-        Extracts text from PDF using pdfminer.six for layout preservation,
-        with PyMuPDF/OCR fallback for image-only pages.
+        Extracts text from PDF using pdfminer.six for layout preservation.
+        Falls back to PyMuPDF/OCR for image-only pages.
         """
         text_chunks: List[str] = []
         pages_count = 0
-        is_fully_searchable = True
+        is_searchable = False
 
         try:
             # --- Primary Extraction: pdfminer.six for Layout ---
@@ -69,7 +69,7 @@ class ResumeExtractor:
                 char_margin=2.0,
                 word_margin=0.1,
                 line_margin=0.5,
-                boxes_flow=0.5,
+                boxes_flow=0.5, # Try 0.5 for left-to-right, top-to-bottom flow
                 detect_vertical=False,
                 all_texts=False
             )
@@ -79,25 +79,24 @@ class ResumeExtractor:
             
             pdfminer_text = output_string.getvalue()
 
-            if pdfminer_text.strip():
-                # If pdfminer finds text, use it directly (best for layout)
+            if pdfminer_text and not pdfminer_text.isspace():
+                is_searchable = True
                 text_chunks.append(pdfminer_text)
-                
-                # Get page count using fitz (still useful for metadata)
-                with fitz.open(path) as doc:
+                with fitz.open(path) as doc: # Use fitz just to get page count
                     pages_count = doc.page_count
                 
-                logger.info("PDF text extracted using pdfminer.six.")
-                
             else:
-                # --- Fallback: If pdfminer.six finds no text, the PDF is likely a scan (image-only) ---
-                is_fully_searchable = False
-                logger.warning("PDF is likely a scan. Falling back to page-by-page OCR.")
+                # --- Fallback: If pdfminer.six finds no text, the PDF is likely a scan ---
+                logger.warning(f"No text layer found in {path.name}. Falling back to OCR.")
                 
                 with fitz.open(path) as doc:
                     pages_count = doc.page_count
                     for page_no in range(pages_count):
                         page = doc.load_page(page_no)
+                        
+                        # Check if page itself has any text first
+                        if page.get_text("text"):
+                            is_searchable = True # At least one page has text
                         
                         # Rasterize page and run OCR
                         pix = page.get_pixmap(dpi=300) # Higher DPI for better OCR
@@ -107,30 +106,22 @@ class ResumeExtractor:
                         text_chunks.append(ocr_text)
 
         except Exception as e:
-            logger.error(f"Critical PDF extraction failure: {e}")
-            # In a real system, you might raise the error or return an empty result here.
+            logger.error(f"Critical PDF extraction failure for {path.name}: {e}")
             return ExtractionResult(text="", source=str(path), pages=0, metadata={"method": "failure"})
 
-
         full_text = "\n\n".join(chunk for chunk in text_chunks if chunk and chunk.strip())
-        
-        # NOTE: You should insert the clean-up/post-processing logic here (Regex, typo correction)
-        # full_text = self._clean_text(full_text) # As recommended in the previous answer
-
-        method = "pdfminer_six" if is_fully_searchable else "pdfminer_six+ocr_fallback"
+        method = "pdfminer_six" if is_searchable else "ocr_fallback"
         
         return ExtractionResult(text=full_text, source=str(path), pages=pages_count,
                                  metadata={"method": method})
 
     def _extract_docx(self, path: Path) -> ExtractionResult:
-        # ... (unchanged)
         doc = docx.Document(path)
         paras = [p.text for p in doc.paragraphs if p.text and p.text.strip()]
         text = "\n".join(paras)
         return ExtractionResult(text=text, source=str(path), pages=0, metadata={"method": "docx"})
 
     def _extract_image(self, path: Path) -> ExtractionResult:
-        # ... (unchanged)
         img = Image.open(path)
         img = preprocess_image_for_ocr(img)
         text = pytesseract.image_to_string(img, lang=self.ocr_lang, config=self.ocr_config)
