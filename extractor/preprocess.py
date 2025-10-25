@@ -3,14 +3,7 @@ from PIL import Image, ImageFilter, ImageOps
 import numpy as np
 
 def preprocess_image_for_ocr(img: Image.Image) -> Image.Image:
-    """
-    Basic preprocessing chain that helps OCR accuracy:
-      - convert to grayscale
-      - apply adaptive-like thresholding (lightweight)
-      - optionally sharpen
-      - resize small images
-    """
-    # convert to grayscale
+  
     img = img.convert("L")
 
     # Resize if very small (improves recognition)
