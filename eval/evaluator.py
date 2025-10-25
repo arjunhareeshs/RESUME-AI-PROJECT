@@ -65,13 +65,44 @@ def evaluate_pair(ref_text: str, hyp_text: str) -> dict:
 # RESUME EXTRACTION
 # -----------------------------
 def extract_text_from_pdf(file_path: str) -> str:
+    """Extract text from PDF using multiple methods for better accuracy"""
     text = ""
-    with pdfplumber.open(file_path) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text + "\n"
-    return text
+    
+    # Method 1: Try pdfplumber first (better for tables and layout)
+    try:
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
+        if text.strip():
+            return text
+    except Exception as e:
+        print(f"pdfplumber failed: {e}")
+    
+    # Method 2: Fallback to PyMuPDF (fitz)
+    try:
+        import fitz
+        doc = fitz.open(file_path)
+        for page_num in range(doc.page_count):
+            page = doc[page_num]
+            text += page.get_text() + "\n"
+        doc.close()
+        if text.strip():
+            return text
+    except Exception as e:
+        print(f"PyMuPDF failed: {e}")
+    
+    # Method 3: Try pdfminer as last resort
+    try:
+        from pdfminer.high_level import extract_text
+        text = extract_text(file_path)
+        if text.strip():
+            return text
+    except Exception as e:
+        print(f"pdfminer failed: {e}")
+    
+    raise ValueError(f"Could not extract text from {file_path} using any method")
 
 def extract_text_from_docx(file_path: str) -> str:
     return docx2txt.process(file_path)
@@ -80,33 +111,78 @@ def extract_text_from_docx(file_path: str) -> str:
 # CLEANING & SEGMENTATION
 # -----------------------------
 def clean_resume_text(raw_text: str) -> str:
+    """Clean and normalize resume text"""
+    # Remove excessive whitespace and normalize line breaks
     text = re.sub(r'\n+', '\n', raw_text)
+    
+    # Fix broken words at line breaks (common in PDF extraction)
     text = re.sub(r'\n([a-z])', r' \1', text)
-    text = text.strip()
-    return text
+    
+    # Remove excessive spaces
+    text = re.sub(r' +', ' ', text)
+    
+    # Remove special characters that might interfere with parsing
+    text = re.sub(r'[^\w\s@\.\+\-\(\)\/\:]', ' ', text)
+    
+    # Clean up email patterns
+    text = re.sub(r'\s+@\s+', '@', text)
+    
+    # Clean up phone number patterns
+    text = re.sub(r'\s+\+\s+', '+', text)
+    
+    return text.strip()
 
 def segment_resume(text: str) -> dict:
+    """Segment resume text into structured sections"""
+    # Expanded list of common resume headers
     headers = [
-        "PROFILE", "CONTACT", "PROJECTS", "TECH SKILLS", 
-        "CERTIFICATIONS", "SOFT SKILLS", "EDUCATION", "LANGUAGES"
+        "PROFILE", "SUMMARY", "OBJECTIVE", "ABOUT", "ABOUT ME",
+        "CONTACT", "CONTACT INFORMATION", "CONTACT DETAILS",
+        "PROJECTS", "PROJECT EXPERIENCE", "PERSONAL PROJECTS",
+        "TECH SKILLS", "TECHNICAL SKILLS", "SKILLS", "TECHNOLOGIES",
+        "CERTIFICATIONS", "CERTIFICATES", "CERTIFICATE",
+        "SOFT SKILLS", "INTERPERSONAL SKILLS", "PERSONAL SKILLS",
+        "EDUCATION", "ACADEMIC BACKGROUND", "QUALIFICATIONS",
+        "LANGUAGES", "LANGUAGE SKILLS", "LANGUAGE PROFICIENCY",
+        "EXPERIENCE", "WORK EXPERIENCE", "PROFESSIONAL EXPERIENCE",
+        "INTERNSHIP", "INTERNSHIPS", "INTERNSHIP EXPERIENCE",
+        "ACHIEVEMENTS", "ACCOMPLISHMENTS", "AWARDS",
+        "HOBBIES", "INTERESTS", "PERSONAL INTERESTS"
     ]
-    header_pattern = re.compile(r'^(' + '|'.join(headers) + r')$', re.I)
+    
+    # Create pattern that matches headers with optional punctuation
+    header_pattern = re.compile(r'^(' + '|'.join(headers) + r')[:\s]*$', re.I)
 
     sections = {}
     current_section = None
+    other_content = []
 
     for line in text.split("\n"):
         line = line.strip()
         if not line:
             continue
+            
+        # Check if this line is a header
         if header_pattern.match(line):
-            current_section = line.upper()
+            current_section = line.upper().rstrip(' :')
             sections[current_section] = []
         elif current_section:
             sections[current_section].append(line)
+        else:
+            # Content before any section header
+            other_content.append(line)
 
+    # Join content for each section
     for k in sections:
-        sections[k] = " ".join(sections[k])
+        sections[k] = " ".join(sections[k]).strip()
+    
+    # Add any content that didn't fit into sections
+    if other_content:
+        sections["OTHER"] = " ".join(other_content).strip()
+    
+    # Remove empty sections
+    sections = {k: v for k, v in sections.items() if v}
+    
     return sections
 
 # -----------------------------
