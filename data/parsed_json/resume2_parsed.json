@@ -1,0 +1,78 @@
+{
+    "source": "C:\\A I  - P R O J E C T S\\RESUME-AI-PROJECT\\data\\uploads\\resume2.pdf",
+    "metadata": {
+        "method": "pdfplumber_kmeans_zoned",
+        "detected_columns": 2
+    },
+    "UNKNOWN_COL_0": "SRI VARSHA P\nProduct Designer\nASPIRING GENERATIVE AI ENGINEER",
+    "PROFILE": "I’m an undergraduate Computer Science and\nEngineering student at Bannari Amman\nInstitute of Technology, Sathy. I’m currently part\nof the AI Workforce team, where I work on\n100%\nMachine learning\n75%\nDeep learning\nDECLARATION: I hereby declare that all information\ngiven above are true to the best of my knowledge.\nSri Varsha P",
+    "PROJECTS": {
+        "LEARNING_IM_PASSIONATE_ABOUT_BUILDING": {
+            "title": "Learning. I’m passionate about building",
+            "description": []
+        },
+        "INTELLIGENT_SYSTEMS_AND_EXPLORING_HOW_AI_CAN": {
+            "title": "intelligent systems and exploring how AI can",
+            "description": []
+        },
+        "SOLVE_REAL_WORLD_PROBLEMS": {
+            "title": "solve real-world problems.",
+            "description": []
+        },
+        "DRIVEN_PROBLEM_SOLVING_WHILE_CONTINUOUSLY_LEARNING_AND": {
+            "title": "driven problem solving while continuously learning and",
+            "description": []
+        },
+        "FACE_RECOGNITION_SYSTEM_IMPLEMENTED_A_FACIAL": {
+            "title": "Face Recognition System – Implemented a facial",
+            "description": []
+        },
+        "RECOGNITION_MODEL_USING_DEEP_LEARNING_FOR_REAL_TIME": {
+            "title": "recognition model using deep learning for real-time",
+            "description": []
+        },
+        "IDENTIFICATION_AND_VERIFICATION": {
+            "title": "identification and verification.",
+            "description": [
+                "Text Generation using Mistral AI – Built a transformer-"
+            ]
+        },
+        "BASED_TEXT_GENERATION_MODEL_LEVERAGING_THE_MISTRAL_7B": {
+            "title": "based text generation model leveraging the Mistral-7B",
+            "description": []
+        },
+        "ARCHITECTURE_FOR_NATURAL_LANGUAGE_GENERATION": {
+            "title": "architecture for natural language generation.",
+            "description": [
+                "Object Detection using YOLOv8 – Developed an object",
+                "detection pipeline using YOLOv8 to identify and classify"
+            ]
+        },
+        "MULTIPLE_OBJECTS_IN_IMAGES_AND_VIDEOS": {
+            "title": "multiple objects in images and videos.",
+            "description": [
+                "Classification Model using Dataset – Trained and evaluated",
+                "machine learning models for predictive classification tasks using"
+            ]
+        },
+        "REAL_WORLD_DATASETS": {
+            "title": "real-world datasets.",
+            "description": []
+        },
+        "REFERENCE": {
+            "title": "Reference:",
+            "description": []
+        },
+        "GITHUB_HTTPSGITHUBCOMSRIVARSHA1409": {
+            "title": "Github: https://github.com/srivarsha1409",
+            "description": [
+                "Linkedin: https://www.linkedin.com/in/sri-varsha-p-08b361369/"
+            ]
+        }
+    },
+    "CONTACT": "75488 42310\nsrivarshap.cs24@bitsathy.ac.in\nsrivarshagkgk@gmail.com\n164,sarathambal nagar,\nKarumathampatti.",
+    "TECH_SKILLS": "C , Python, UI/UX, Java(Foundational)\nCreativity\nMachine Learning\nProblem Solving\nCritical Thinking\nLeadership\nArea of Interest\nComputer vision\nGenerative AI\nNeural Network Architectures",
+    "LANGUAGES": "English (r,w,s)\nTamil (r,w,s)\nTelugu (s)",
+    "CAREER_OBJECTIVE": "To obtain a challenging position in the field of Artificial\nIntelligence and Computer Science where I can apply my\nknowledge of Machine Learning and Deep Learning to\ndevelop innovative and efficient solutions. I aim to",
+    "EDUCATION": "Bannari Amman Institute Of Technology,Sathyamangalam\nB.E -CSE(expected to graduate at 2028)\n2nd\nCGPA: 8.09 (upto semester)\nKongu Vellalar Matri.Hr.Sec.School,karumathampatti\nBoard results:\n10th(\n(HSC) - 92% (2022)\n12th\n(SSLC) -94.5% (2024)"
+}
