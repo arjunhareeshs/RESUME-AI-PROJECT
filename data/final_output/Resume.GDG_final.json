@@ -1,0 +1,108 @@
+{
+    "source": "data\\uploads\\Resume.GDG.pdf",
+    "metadata": {
+        "method": "pdfplumber_kmeans_zoned",
+        "detected_columns": 2
+    },
+    "personal_info": {
+        "name": "System Programming",
+        "contact": {
+            "email": "gavuthaman27@gmail.com",
+            "phone": "8012699843",
+            "linkedin": "https://www.linkedin.com/in/gavutham-d-465a98325",
+            "github": "https://github.com/gavutham-d",
+            "location": null,
+            "other_links": [
+                "mailto:gavuthaman27@gmail.com"
+            ]
+        }
+    },
+    "summary": "Diploma in Computer Applications:\nComputer Science Engineering student with cloud\nEngineer opportunities. Proven track record in\nSaaS\u0000.",
+    "skills": {
+        "technical": [
+            "devops and infrastructure",
+            "problem-solving: analytical thinking with"
+        ],
+        "soft": [
+            "Automation",
+            "Completed",
+            "Innovation category",
+            "Risk assessment",
+            "Simulated real-world scenarios",
+            "Solutions",
+            "System administration",
+            "Training programs"
+        ]
+    },
+    "education": [
+        {
+            "institution": "Team Collaboration: Effective performance",
+            "degree": "Bachelor",
+            "field_of_study": "Agility"
+        }
+    ],
+    "projects": {
+        "BIT_HACKATHON_SEASON_1_2ND_PRIZE_SOFTWARE": {
+            "title": "BIT Hackathon Season 1 | 2nd Prize - Software",
+            "description": ""
+        },
+        "DEMONSTRATED_INNOVATIVE_PROBLEM_SOLVING": {
+            "title": "Demonstrated innovative problem-solving",
+            "description": ""
+        },
+        "DELIVERED_CREATIVE_SOFTWARE_SOLUTION": {
+            "title": "Delivered creative software solution",
+            "description": ""
+        },
+        "CLOUD_COMPUTING_COMPREHENSIVE": {
+            "title": "Cloud Computing: Comprehensive",
+            "description": ""
+        },
+        "ARCHITECTURE": {
+            "title": "architecture",
+            "description": ""
+        },
+        "IAAS_PAAS_SAAS_SERVICE_MODELS": {
+            "title": "IaaS, PaaS, SaaS service models",
+            "description": ""
+        },
+        "TATA_FORGE_COMPLETED": {
+            "title": "Tata Forge \u0000Completed)",
+            "description": ""
+        },
+        "CSC_COMPLETED": {
+            "title": "CSC \u0000Completed)",
+            "description": ""
+        }
+    },
+    "certifications": [
+        "Location: Dindigul, Tamil Nadu",
+        "LinkedIn:linkedin.com/in/gavutham-d-465a98325 | GitHub:github.com/gavutham-d",
+        "Cloud Computing Fundamentals: IaaS, PaaS, SaaS service models",
+        "Cloud Computing Fundamentals:",
+        "Cybersecurity Job Simulation:"
+    ],
+    "languages": [
+        "Diploma in Computer Applications",
+        "CSC \u0000Computer Science Corporation) | Status:",
+        "CAREER FOCUS",
+        "Cloud Computing Platforms",
+        "Cloud Security and Compliance",
+        "Cloud Computing: IaaS, PaaS, SaaS service models",
+        "Cybersecurity: Security protocols, threat analysis,",
+        "System Architecture and Scalable",
+        "Tools & Technologies: Figma, Linux, Windows,",
+        "proven debugging and optimization capabilities"
+    ],
+    "achievements": [],
+    "hobbies": [],
+    "misc": {
+        "CERTIFICATIONS": "Location: Dindigul, Tamil Nadu\nLinkedIn:linkedin.com/in/gavutham-d-465a98325 | GitHub:github.com/gavutham-d\nCloud Computing Fundamentals: IaaS, PaaS, SaaS service models\nCloud Computing Fundamentals:\nCybersecurity Job Simulation:",
+        "TECH_SKILLS": "Problem-Solving: Analytical thinking with\nDevOps and Infrastructure",
+        "EDUCATION": "Team Collaboration: Effective performance\nLearning Bachelor Agility: of Engineering Quick adaptation - Computer to Science new and",
+        "LANGUAGES": "Diploma in Computer Applications\nCSC \u0000Computer Science Corporation) | Status:\nCAREER FOCUS\nCloud Computing Platforms\nCloud Security and Compliance\nCloud Computing: IaaS, PaaS, SaaS service models\nCybersecurity: Security protocols, threat analysis,\nSystem Architecture and Scalable\nTools & Technologies: Figma, Linux, Windows,\nproven debugging and optimization capabilities",
+        "EXPERIENCE": "Cybersecurity Job Simulation | Tata Forge\nCompleted comprehensive cybersecurity\nApplied security best practices in",
+        "PROJECTS": "BIT Hackathon Season 1 | 2nd Prize - Software\nDemonstrated innovative problem-solving\nDelivered creative software solution\nCloud Computing: Comprehensive\narchitecture\nIaaS, PaaS, SaaS service models\nTata Forge \u0000Completed)\nCSC \u0000Completed)",
+        "SOFT_SKILLS": "technologies Engineering and programming concepts\nGraduation: 2028 | CGPA\u0000 8.05/10.0\nCompleted\n\u0000AWS, Azure, Google Cloud)\nAutomation\nrisk assessment\nSolutions\nSystem Administration\nCode Optimization, Hardware Troubleshooting\nTraining programs\ntraining and simulation exercises\nprotocols and enterprise security frameworks\nsimulated real-world scenarios\nInnovation Category\nand team collaboration capabilities\nunder competitive time constraints\nunderstanding of IaaS, PaaS, SaaS concepts and cloud"
+    }
+}

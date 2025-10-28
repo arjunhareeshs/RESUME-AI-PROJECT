@@ -1,34 +1,20 @@
-# -------- CORE EXTRACTORS --------
-PyMuPDF==1.24.8
-pdfminer.six==20231228
-pdfplumber==0.11.1
-python-docx==0.8.11
-Pillow==10.2.0
-pytesseract==0.3.10
+pdfplumber==0.11.1      # Main PDF parser, built on pdfminer.six
+PyMuPDF==1.24.8         # Used for link extraction (fitz)
+python-docx==0.8.11     # For reading .docx files
 
-# -------- OCR/IMAGE IMPROVEMENTS --------
-opencv-python==4.10.0.84
-scikit-image==0.22.0
+# Image Handling & OCR
+Pillow==10.2.0          # Image processing library (needed by pdfplumber, pdf2image, pytesseract)
+pdf2image==1.16.3       # For converting PDF pages to images for OCR fallback
+pytesseract==0.3.10     # Tesseract OCR wrapper (fallback OCR)
+paddleocr               # Main OCR engine (use latest stable version)
+# Note: paddleocr requires paddlepaddle. Install separately: pip install paddlepaddle
+opencv-python==4.10.0.84 # Often needed by OCR engines and image preprocessing
+scikit-image==0.22.0    # Used by some image processing steps
 
-# -------- PARSING, CLEANING & NLP --------
-spacy==3.8.7
-en-core-web-sm==3.8.0
-en-core-web-md==3.8.0
-pyspellchecker==0.8.1
-regex==2024.5.15
-pyresparser==1.0.6
+# Layout Analysis & Utilities
+numpy<2.0               # CRITICAL: Version must be < 2.0 for compatibility with paddleocr/faiss
+scikit-learn            # For K-Means clustering used in column detection
 
-# -------- EVALUATION + UTILITIES --------
-numpy==1.26.4
-pandas==2.2.3
-tqdm==4.66.4
-rapidfuzz==3.9.4
-
-# -------- GENERAL UTILITIES --------
-python-dotenv==1.0.1
-loguru==0.7.2
-rich==13.7.1
-
-pdf2image==1.16.3
-nltk==3.9.1
-sentence-transformers==3.2.1
+# Parsing Helpers
+fuzzywuzzy              # For fuzzy header matching in parser.py
+python-Levenshtein      # Optional: Makes fuzzywuzzy much faster

@@ -1,4 +1,4 @@
-# extractor/extractor.py (K-Means + Vertical Zoning + Text Only)
+# extractor/extractor.py (K-Means + Vertical Zoning + Text Only + Link Extraction)
 import json
 import logging
 from pathlib import Path
@@ -8,6 +8,7 @@ import sys
 import glob
 
 import pdfplumber
+import fitz # <-- 1. IMPORT PyMuPDF
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
@@ -58,14 +59,14 @@ logger.addHandler(handler)
 class ExtractionResult:
     """Data container for structured JSONL output."""
     def __init__(self, source: str, pages: int, metadata: dict, 
-                 column_texts: List[str]):
+                 column_texts: List[str],
+                 links: List[Dict] = None): # <-- 2. ADD links parameter
                  
         self.source = str(source)
         self.pages = pages
         self.metadata = metadata
         self.column_texts = [t.strip() for t in column_texts]
-        
-        # --- REMOVED styled_column_data ---
+        self.links = links if links is not None else [] # <-- 2. ADD links field
         
         self.text = "\n\n--- Column Break ---\n\n".join(self.column_texts)
 
@@ -75,7 +76,7 @@ class ExtractionResult:
             "pages": self.pages,
             "metadata": self.metadata,
             "column_texts": self.column_texts,
-            # --- REMOVED styled_column_data ---
+            "links": self.links, # <-- 3. ADD links to JSON
             "combined_text": self.text,
         }
         return json.dumps(data, ensure_ascii=False, default=float)
@@ -132,40 +133,43 @@ class ResumeExtractor:
         
         return best_k, best_labels
 
-    # -------------- PDF Extraction (Simplified) --------------
+    # -------------- PDF Extraction (Modified) --------------
     
     def extract_pdf(self, file_path: Path) -> ExtractionResult:
+        final_column_texts = []
+        links_data = []
+        pdf_pages_count = 0
+        metadata = {"method": "failure"} # Default metadata
+
         try:
+            # --- Step 1: Extract Text using pdfplumber ---
             with pdfplumber.open(file_path) as pdf:
+                pdf_pages_count = len(pdf.pages)
                 max_cols_detected = 1
                 
+                # First pass for column detection
                 for page in pdf.pages:
                     header_height = page.height * 0.18 
                     body_top = page.bbox[1] + header_height
                     body_crop = page.crop((page.bbox[0], body_top, page.bbox[2], page.bbox[3]))
-                    
                     words = body_crop.extract_words()
                     k, _ = self.detect_column_labels_kmeans(words, body_crop.bbox)
                     max_cols_detected = max(max_cols_detected, k)
                 
                 logger.info(f"📄 Document has a maximum of {max_cols_detected} column(s).")
                 
-                # --- MODIFIED: Store raw words in buckets ---
                 final_column_word_buckets = [[] for _ in range(max_cols_detected)]
 
+                # Second pass for text extraction
                 for page_num, page in enumerate(pdf.pages, start=1):
-                    
                     header_height = page.height * 0.18
                     body_top = page.bbox[1] + header_height
-                    
                     header_crop = page.crop((page.bbox[0], page.bbox[1], page.bbox[2], body_top))
                     body_crop = page.crop((page.bbox[0], body_top, page.bbox[2], page.bbox[3]))
                     
-                    # 1. Process Header
                     header_words = header_crop.extract_words()
                     final_column_word_buckets[0].extend(header_words)
                     
-                    # 2. Process Body
                     body_words = body_crop.extract_words()
                     k, labels = self.detect_column_labels_kmeans(body_words, body_crop.bbox)
 
@@ -174,7 +178,6 @@ class ResumeExtractor:
                         column_word_buckets[label].append(word)
                     
                     sorted_buckets = sorted(column_word_buckets.items(), key=lambda item: item[1][0]['x0'] if item[1] else 0)
-
                     is_full_width_body = (k < max_cols_detected)
 
                     for i, (label, col_words) in enumerate(sorted_buckets):
@@ -184,44 +187,70 @@ class ResumeExtractor:
                             if i < len(final_column_word_buckets): 
                                 final_column_word_buckets[i].extend(col_words)
 
-                # --- MODIFIED: Process buckets into text ---
-                final_column_texts = []
+                # Process buckets into text
                 for word_bucket in final_column_word_buckets:
                     plain_text = self.style_processor.process_word_list(word_bucket)
                     final_column_texts.append(plain_text)
                 
-                if not any(t.strip() for t in final_column_texts):
-                    logger.warning("⚠️ No text detected. Using OCR fallback...")
-                    return self.extract_pdf_ocr(file_path)
+                metadata = {"method": "pdfplumber_kmeans_zoned", "detected_columns": max_cols_detected}
 
-                return ExtractionResult(
-                    source=file_path,
-                    pages=len(pdf.pages),
-                    metadata={"method": "pdfplumber_kmeans_zoned", "detected_columns": max_cols_detected},
-                    column_texts=final_column_texts
-                    # --- REMOVED styled_column_data ---
-                )
+                # --- Step 2: Extract Links using fitz ---
+                try:
+                    doc = fitz.open(file_path)
+                    for page_num, page in enumerate(doc):
+                        page_links = page.get_links() # Get list of link dictionaries
+                        for link in page_links:
+                            # 'uri' is the URL, 'from' is the Rect where the link is
+                            if link.get('kind') == fitz.LINK_URI and link.get('uri'):
+                                links_data.append({
+                                    "url": link['uri'],
+                                    "page": page_num + 1,
+                                    "rect": list(link['from']) # Convert Rect to list for JSON
+                                })
+                    doc.close()
+                    logger.info(f"🔗 Extracted {len(links_data)} links using fitz.")
+                except Exception as link_e:
+                    logger.warning(f"⚠️ Could not extract links using fitz: {link_e}")
+                    # Continue without links if this part fails
+            
+            # --- Step 3: OCR Fallback Check ---
+            if not any(t.strip() for t in final_column_texts):
+                logger.warning("⚠️ No text detected via pdfplumber. Using OCR fallback...")
+                # Note: OCR fallback doesn't extract links
+                return self.extract_pdf_ocr(file_path)
+
+            # --- Step 4: Return combined result ---
+            return ExtractionResult(
+                source=file_path,
+                pages=pdf_pages_count,
+                metadata=metadata,
+                column_texts=final_column_texts,
+                links=links_data # Pass the extracted links
+            )
+
         except Exception as e:
             logger.exception(f"❌ PDF Extraction failed: {e}") 
+            # Return error result, ensuring links field exists
             return ExtractionResult(
                 source=file_path, pages=0,
                 metadata={"method": "failure", "error": str(e)},
-                column_texts=[""]
-                # --- REMOVED styled_column_data ---
+                column_texts=[""],
+                links=[] 
             )
 
-    # -------------- OCR Fallback (Simplified) --------------
+    # -------------- OCR Fallback (Modified to return links field) --------------
     def extract_pdf_ocr(self, file_path: Path) -> ExtractionResult:
         if not PDF2IMAGE_AVAILABLE:
             return ExtractionResult(
                 source=file_path, pages=0,
                 metadata={"method": "ocr_fallback_error", "error": "pdf2image not found"},
-                column_texts=[""]
+                column_texts=[""], links=[]
             )
             
         try:
             images = convert_from_path(file_path, dpi=300)
             texts = []
+            # ... (rest of OCR logic is unchanged) ...
             if self.paddle:
                 for i, img in enumerate(images):
                     logger.info(f"Running PaddleOCR on page {i+1}...")
@@ -237,42 +266,49 @@ class ResumeExtractor:
                     text = pytesseract.image_to_string(img, lang=self.ocr_lang)
                     texts.append(f"--- Page {i+1} ---\n{text}")
 
+
+            # Return OCR result, indicating no links extracted
             return ExtractionResult(
                 source=file_path, pages=len(images),
                 metadata={"method": "ocr_fallback", "engine": "paddle" if self.paddle else "tesseract"},
-                column_texts=texts
+                column_texts=texts,
+                links=[] # OCR doesn't provide links
             )
         except Exception as e:
             logger.error(f"OCR fallback failed: {e}")
             return ExtractionResult(
                 source=file_path, pages=0,
                 metadata={"method": "ocr_fallback_error", "error": str(e)},
-                column_texts=[""]
+                column_texts=[""], links=[]
             )
 
-    # -------------- Other File Handlers (Simplified) --------------
+    # -------------- Other File Handlers (Modified to return links field) --------------
     
     def extract_docx(self, file_path: Path) -> ExtractionResult:
+        # DOCX doesn't have the same link structure as PDF
         try:
             doc = docx.Document(file_path)
             text = "\n".join([p.text for p in doc.paragraphs if p.text])
             return ExtractionResult(
                 source=file_path, pages=0,
                 metadata={"method": "docx"},
-                column_texts=[text]
+                column_texts=[text],
+                links=[] # No links extracted from DOCX
             )
         except Exception as e:
             logger.error(f"DOCX extraction failed: {e}")
             return ExtractionResult(
                 source=file_path, pages=0,
                 metadata={"method": "docx_error", "error": str(e)},
-                column_texts=[""]
+                column_texts=[""], links=[]
             )
 
     def extract_image(self, file_path: Path) -> ExtractionResult:
+        # Images don't have embedded links
         try:
             img = Image.open(file_path)
             text = ""
+            # ... (rest of image OCR logic is unchanged) ...
             if self.paddle:
                 logger.info("Running PaddleOCR on image...")
                 np_img = np.array(img)
@@ -284,17 +320,19 @@ class ResumeExtractor:
                 img = preprocess_image_for_ocr(img)
                 text = pytesseract.image_to_string(img, lang=self.ocr_lang)
 
+
             return ExtractionResult(
                 source=file_path, pages=1,
                 metadata={"method": "image_ocr", "engine": "paddle" if self.paddle else "tesseract"},
-                column_texts=[text]
+                column_texts=[text],
+                links=[] # No links extracted from images
             )
         except Exception as e:
             logger.error(f"Image extraction failed: {e}")
             return ExtractionResult(
                 source=file_path, pages=1,
                 metadata={"method": "image_error", "error": str(e)},
-                column_texts=[""]
+                column_texts=[""], links=[]
             )
 
     # -------------- Main Entry Point (Unchanged) --------------
@@ -311,19 +349,20 @@ class ResumeExtractor:
             return self.extract_image(file_path)
         else:
             logger.warning(f"Unsupported file type: {ext}")
+            # Return with empty links
             return ExtractionResult(
                 source=file_path, pages=0,
                 metadata={"method": "unsupported_type", "error": f"File type {ext} not supported."},
-                column_texts=[""]
+                column_texts=[""], links=[]
             )
 
     def process_and_save(self, file_path: str) -> str:
         file_path = Path(file_path)
-        result = self.extract(file_path)
+        result = self.extract(file_path) # This result object now includes links
         
         output_file = self.output_dir / f"{file_path.stem}.jsonl"
         with open(output_file, "w", encoding="utf-8") as f:
-            f.write(result.to_jsonl())
+            f.write(result.to_jsonl()) # .to_jsonl() now includes links
             
         logger.info(f"✅ Saved: {output_file}")
         return str(output_file)

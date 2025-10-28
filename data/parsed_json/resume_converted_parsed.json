@@ -1,7 +1,0 @@
-{
-    "source": "C:\\A I  - P R O J E C T S\\RESUME-AI-PROJECT\\data\\uploads\\resume_converted.pdf",
-    "metadata": {
-        "method": "ocr_fallback_error",
-        "error": "Unable to get page count. Is poppler installed and in PATH?"
-    }
-}

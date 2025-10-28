@@ -1,0 +1,101 @@
+{
+    "source": "data\\uploads\\resume2.pdf",
+    "metadata": {
+        "method": "pdfplumber_kmeans_zoned",
+        "detected_columns": 2
+    },
+    "personal_info": {
+        "name": "SRI VARSHA",
+        "contact": {
+            "email": "srivarshap.cs24@bitsathy.ac.in",
+            "phone": null,
+            "linkedin": "https://www.linkedin.com/in/sri-varsha-p-08b361369/",
+            "github": "https://github.com/srivarsha1409",
+            "location": null
+        }
+    },
+    "summary": "I’m an undergraduate Computer Science and\nEngineering student at Bannari Amman\nInstitute of Technology, Sathy. I’m currently part\nof the AI Workforce team, where I work on\nintelligent systems and exploring how AI can\nsolve real-world problems.\n100%\nMachine learning\n75%\nDeep learning\nDECLARATION: I hereby declare that all information\ngiven above are true to the best of my knowledge.\nSri Varsha P",
+    "skills": {
+        "technical": [
+            "computer vision",
+            "creativity",
+            "critical thinking",
+            "generative ai",
+            "leadership",
+            "machine learning",
+            "neural network architectures",
+            "problem solving",
+            "python",
+            "ui",
+            "ux"
+        ],
+        "soft": []
+    },
+    "education": [
+        {
+            "institution": "Bannari Amman Institute Of Technology,Sathyamangalam",
+            "degree": "Bachelor",
+            "field_of_study": "CSE",
+            "gpa": "8.09",
+            "details": "2nd"
+        },
+        {
+            "institution": "Kongu Vellalar Matri.Hr.Sec.School,karumathampatti",
+            "degree": "10th Grade / SSLC",
+            "details": "Board results:\n(HSC) - 92% (2022)\n12th\n(SSLC) -94.5% (2024)"
+        }
+    ],
+    "projects": {
+        "DRIVEN_PROBLEM_SOLVING_WHILE_CONTINUOUSLY_LEARNING_AND": {
+            "title": "driven problem solving while continuously learning and",
+            "description": ""
+        },
+        "FACE_RECOGNITION_SYSTEM_IMPLEMENTED_A_FACIAL": {
+            "title": "Face Recognition System – Implemented a facial",
+            "description": ""
+        },
+        "RECOGNITION_MODEL_USING_DEEP_LEARNING_FOR_REAL_TIME": {
+            "title": "recognition model using deep learning for real-time",
+            "description": "identification and verification."
+        },
+        "TEXT_GENERATION_USING_MISTRAL_AI_BUILT_A_TRANSFORMER_": {
+            "title": "Text Generation using Mistral AI – Built a transformer-",
+            "description": ""
+        },
+        "BASED_TEXT_GENERATION_MODEL_LEVERAGING_THE_MISTRAL_7B": {
+            "title": "based text generation model leveraging the Mistral-7B",
+            "description": "architecture for natural language generation."
+        },
+        "OBJECT_DETECTION_USING_YOLOV8_DEVELOPED_AN_OBJECT": {
+            "title": "Object Detection using YOLOv8 – Developed an object",
+            "description": ""
+        },
+        "DETECTION_PIPELINE_USING_YOLOV8_TO_IDENTIFY_AND_CLASSIFY": {
+            "title": "detection pipeline using YOLOv8 to identify and classify",
+            "description": "multiple objects in images and videos."
+        },
+        "CLASSIFICATION_MODEL_USING_DATASET_TRAINED_AND_EVALUATED": {
+            "title": "Classification Model using Dataset – Trained and evaluated",
+            "description": ""
+        },
+        "MACHINE_LEARNING_MODELS_FOR_PREDICTIVE_CLASSIFICATION_TASKS_USING": {
+            "title": "machine learning models for predictive classification tasks using",
+            "description": "real-world datasets."
+        }
+    },
+    "certifications": [],
+    "languages": [
+        "English (r,w,s)",
+        "Tamil (r,w,s)",
+        "Telugu (s)"
+    ],
+    "achievements": [],
+    "hobbies": [],
+    "misc": {
+        "PROFILE": "I’m an undergraduate Computer Science and\nEngineering student at Bannari Amman\nInstitute of Technology, Sathy. I’m currently part\nof the AI Workforce team, where I work on\nintelligent systems and exploring how AI can\nsolve real-world problems.\n100%\nMachine learning\n75%\nDeep learning\nDECLARATION: I hereby declare that all information\ngiven above are true to the best of my knowledge.\nSri Varsha P",
+        "PROJECTS": "driven problem solving while continuously learning and\nFace Recognition System – Implemented a facial\nrecognition model using deep learning for real-time\nidentification and verification.\nText Generation using Mistral AI – Built a transformer-\nbased text generation model leveraging the Mistral-7B\narchitecture for natural language generation.\nObject Detection using YOLOv8 – Developed an object\ndetection pipeline using YOLOv8 to identify and classify\nmultiple objects in images and videos.\nClassification Model using Dataset – Trained and evaluated\nmachine learning models for predictive classification tasks using\nreal-world datasets.",
+        "TECH_SKILLS": "C , Python, UI/UX, Java(Foundational)\nCreativity\nMachine Learning\nProblem Solving\nCritical Thinking\nLeadership\nArea of Interest\nComputer vision\nGenerative AI\nNeural Network Architectures",
+        "LANGUAGES": "English (r,w,s)\nTamil (r,w,s)\nTelugu (s)",
+        "EDUCATION": "Bannari Amman Institute Of Technology,Sathyamangalam\nB.E -CSE(expected to graduate at 2028)\n2nd\nCGPA: 8.09 (upto semester)\nKongu Vellalar Matri.Hr.Sec.School,karumathampatti\nBoard results:\n10th(\n(HSC) - 92% (2022)\n12th\n(SSLC) -94.5% (2024)"
+    }
+}

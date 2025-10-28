@@ -1,0 +1,62 @@
+{
+    "source": "data\\uploads\\Resume (1).pdf",
+    "metadata": {
+        "method": "pdfplumber_kmeans_zoned",
+        "detected_columns": 2
+    },
+    "personal_info": {
+        "name": null,
+        "contact": {
+            "email": "gavuthaman27@gmail.com",
+            "phone": "8012699843",
+            "linkedin": null,
+            "github": "https://github.com/gavuth",
+            "location": "Nilakkottai"
+        }
+    },
+    "summary": "I am a proactive, organized and\nresponsible person, with good\ninterpersonal relationships.\nI stand out for good teamwork, quick\ndecision-making and good pressure\nmanagement. I am looking for a\nchallenging position to keep learning.",
+    "skills": {
+        "technical": [
+            "analytical thinking",
+            "c programming",
+            "figma"
+        ],
+        "soft": []
+    },
+    "education": [
+        {
+            "institution": "Bannari Amman Institute of Technolgy",
+            "details": "- Sathyamangalam\n1st Sem - 8.05 CGPA"
+        },
+        {
+            "institution": "Cheran Vidyalaya Mat Hr.Sec School -",
+            "degree": "12th Grade / HSC",
+            "field_of_study": "89",
+            "details": "Dindigul.\nSSLC - 92.4% (2022)"
+        }
+    ],
+    "projects": {},
+    "certifications": [],
+    "languages": [
+        "Tamil - Native",
+        "English - Proficiency"
+    ],
+    "achievements": [
+        "Completed DCA Course at CSC.",
+        "Secured 2nd Prize in BIT",
+        "HACKATHON.",
+        "Completed Typewritting in English"
+    ],
+    "hobbies": [
+        "SPORTS",
+        "READING BOOKS"
+    ],
+    "misc": {
+        "PROFILE": "I am a proactive, organized and\nresponsible person, with good\ninterpersonal relationships.\nI stand out for good teamwork, quick\ndecision-making and good pressure\nmanagement. I am looking for a\nchallenging position to keep learning.",
+        "HOBBIES": "SPORTS\nREADING BOOKS",
+        "EDUCATION": "Bannari Amman Institute of Technolgy\n- Sathyamangalam\n1st Sem - 8.05 CGPA\nCheran Vidyalaya Mat Hr.Sec School -\nDindigul.\nHSC - 89.16% (2024)\nSSLC - 92.4% (2022)",
+        "LANGUAGES": "Tamil - Native\nEnglish - Proficiency",
+        "TECH_SKILLS": "C Programming\nFigma\nAnalytical Thinking",
+        "ACHIEVEMENTS": "Completed DCA Course at CSC.\nSecured 2nd Prize in BIT\nHACKATHON.\nCompleted Typewritting in English"
+    }
+}

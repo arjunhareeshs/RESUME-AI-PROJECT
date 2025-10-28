@@ -1,0 +1,28 @@
+{
+    "source": "data\\uploads\\resume_converted.pdf",
+    "metadata": {
+        "method": "ocr_fallback_error",
+        "error": "Unable to get page count. Is poppler installed and in PATH?"
+    },
+    "personal_info": {
+        "name": null,
+        "contact": {
+            "email": null,
+            "phone": null,
+            "linkedin": null,
+            "github": null,
+            "location": null
+        }
+    },
+    "summary": null,
+    "skills": {
+        "technical": [],
+        "soft": []
+    },
+    "education": [],
+    "projects": {},
+    "certifications": [],
+    "languages": [],
+    "achievements": [],
+    "hobbies": []
+}

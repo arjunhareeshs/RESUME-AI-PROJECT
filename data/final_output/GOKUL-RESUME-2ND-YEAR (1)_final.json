@@ -1,0 +1,165 @@
+{
+    "source": "data\\uploads\\GOKUL-RESUME-2ND-YEAR (1).pdf",
+    "metadata": {
+        "method": "pdfplumber_kmeans_zoned",
+        "detected_columns": 2
+    },
+    "personal_info": {
+        "name": "kumarapalayam-Namakkal\nArtificial Intelligence",
+        "contact": {
+            "email": "gokul9942786@gmail.com",
+            "phone": "7339139639",
+            "linkedin": "https://www.linkedin.com/in/gokul-v-92bbb5329/",
+            "github": "https://github.com/Gokul-bit165",
+            "location": null,
+            "other_links": [
+                "https://www.linkedin.com/in/gokul-v-92bbb5329/",
+                "https://www.hackerrank.com/profile/gokulvm_ad24",
+                "https://www.hackerrank.com/profile/gokulvm_ad24",
+                "https://leetcode.com/u/Gokul_leetcode/",
+                "https://leetcode.com/u/Gokul_leetcode/"
+            ]
+        }
+    },
+    "summary": "vision, and creative ML applications.\nText Embedding Extraction (CLIP/BERT)\nMotivated B.Tech Artificial Intelligence and Data Science student at\nDeveloped a notebook for extracting rich text features with CLIP and BERT,\nBannari Amman Institute of Technology with a strong passion for Machine\nenabling semantic search and embedding-based NLP workflows.\nLearning, Deep Learning, Generative AI, and Data Science. Dedicated to\nexploring AI-driven problem-solving, developing real-world intelligent\nFake News Detection with Transformers\nCreated an end-to-end machine learning pipeline for classifying news",
+    "skills": {
+        "technical": [
+            "and data integrity.",
+            "deep learning",
+            "generative ai",
+            "team collaboration",
+            "text-to-image diffusion model",
+            "transformer"
+        ],
+        "soft": []
+    },
+    "education": [
+        {
+            "institution": "Reliance Matric Higher Secondary School, Erode (2023 – 2024)",
+            "degree": "12th Grade / HSC",
+            "field_of_study": "Grade",
+            "details": "from images using deep learning, advancing accessibility and assistive"
+        },
+        {
+            "institution": "Bannari Amman Institute of Technology, Sathyamangalam",
+            "degree": "Bachelor",
+            "years": "2024 – 2028",
+            "gpa": "7.77",
+            "details": "AI Smart Traffic Project\nDesigned and implemented a traffic monitoring system using computer\nvision and AI, with automated detection and smart analytics for urban\nmobility solutions.\nFace Emotion Recognition (CNN)"
+        }
+    ],
+    "projects": {
+        "PRINTED_INVOICE_EXTRACTOR_WEBAPP": {
+            "title": "Printed Invoice Extractor Webapp",
+            "description": ""
+        },
+        "AI_DEVELOPER_ML_NLP_OPENCV_AGENTS": {
+            "title": "AI DEVELOPER | ML, NLP, OPENCV & AGENTS",
+            "description": "Built a full-stack solution to extract structured data from invoice\nprinted and handwritten text, including integration with CSV exports and"
+        },
+        "HACKXELERATE_2025_FINALISTS": {
+            "title": "HackXelerate 2025 – Finalists",
+            "description": "frontend app development.\nCreated an AI-powered Mental Health Support Platform for\nearly emotional support and detection."
+        },
+        "FLASK_INSURANCE_PREDICTOR": {
+            "title": "Flask Insurance Predictor",
+            "description": "Showcased teamwork and innovation before national judges.\nDeveloped a web application for insurance risk prediction utilizing Flask\nand deployed ML models, highlighting web integration with data science.\nSheHacks’25 – 1st Place (KPR Institute of Engineering & Technology)\nBuilt an impactful tech solution in a 24-hour coding marathon"
+        },
+        "END_TO_END_ML_PIPELINE_WITH_MLFLOW": {
+            "title": "End-to-End ML Pipeline with MLflow",
+            "description": "organized by IEEE WIE.\nConstructed and tracked a full machine learning workflow using MLflow,\nHonored for creativity, collaboration, and innovation.\nillustrating pipeline management and model lifecycle best practices."
+        },
+        "MOBILITYX_20_1ST_PRIZE_20000": {
+            "title": "MOBILITYX 2.0 – 1st Prize (₹20,000)",
+            "description": ""
+        },
+        "NATIONAL_LEVEL_24_HOUR_HACKATHON_TESTING_INNOVATION_AND": {
+            "title": "National-level 24-hour hackathon testing innovation and",
+            "description": ""
+        },
+        "RETAIL_TRANSACTIONS_PREPROCESSING_AND_ANALYSIS": {
+            "title": "Retail Transactions Preprocessing and Analysis",
+            "description": "endurance."
+        },
+        "PERFORMED_FULL_SCALE_EXPLORATORY_DATA_ANALYSIS_AND_FEATURE_ENGINEERING_ON": {
+            "title": "Performed full-scale exploratory data analysis and feature engineering on",
+            "description": "Developed an AI-based Traffic solution with team AI Clashers.\nretail transactions data for insight and predictive modeling."
+        },
+        "STRENGTHENED_TEAMWORK_RESILIENCE_AND_RAPID_PROBLEM_SOLVING_UNDER": {
+            "title": "Strengthened teamwork, resilience, and rapid problem-solving under",
+            "description": "pressure."
+        },
+        "LEADERSHIP_ROLE": {
+            "title": "Leadership Role",
+            "description": ""
+        },
+        "SERVING_AS_VICE_CHAIRMAN_IEEE_STUDENT_BRANCH_BANNARI_AMMAN": {
+            "title": "Serving as Vice Chairman, IEEE Student Branch, Bannari Amman",
+            "description": ""
+        },
+        "DECLARATION": {
+            "title": "Declaration",
+            "description": ""
+        },
+        "INSTITUTE_OF_TECHNOLOGY": {
+            "title": "Institute of Technology",
+            "description": "EVENTS I (GOKUL PARTICIPATED V), declare that all the details provided above\nare true to the best of my knowledge."
+        },
+        "BIGBANG_THE_GREAT_ROTARY_INNOVATION_CHALLENGE_2024_JUN": {
+            "title": "BIGBANG - THE GREAT ROTARY INNOVATION CHALLENGE 2024-JUN",
+            "description": "Appeared as Finalist on June 29, 2024."
+        },
+        "VARNAM_2025_KARPAGAM_INSTITUTE_OF_TECHNOLOGY_2025_FEB": {
+            "title": "VARNAM 2025 - KARPAGAM INSTITUTE OF TECHNOLOGY 2025-FEB",
+            "description": "Appeared as Finalist on June 29, 2024."
+        }
+    },
+    "certifications": [
+        "images/PDFs using OCR (Tesseract), advanced regex parsing, and output",
+        "to CSV. Demonstrates end-to-end pipeline from image processing to",
+        "structured export.",
+        "Python, C, and C++ – IFC",
+        "Infotech",
+        "Infotech",
+        "Generative AI & NLTK",
+        "Workshop – Karpagam",
+        "Institute of Technology"
+    ],
+    "languages": [
+        "Core Domains: Machine Learning |",
+        "Deep Learning | Generative AI |",
+        "English",
+        "Data Science",
+        "Tamil",
+        "AI Frameworks & Tools: YOLO |",
+        "GNN | LLM | NLP | MCP",
+        "Java (Basics) | C (Basics) | C++",
+        "(Basics)",
+        "CS Fundamentals: Data Structures",
+        "& Algorithms (Basics)",
+        "Web Development: HTML | CSS |",
+        "WordPress | Wix",
+        "Design & Tools: Canva | Figma |",
+        "Date: 11-10-2025",
+        "Place: Sathyamangalam",
+        "Photoshop"
+    ],
+    "achievements": [
+        "Engineered a convolutional neural network to classify human facial",
+        "emotions, demonstrating advanced skill in deep learning and computer",
+        "FIESTAA’25",
+        "vision.",
+        "Won a first price with cash award in paper presentation at KPR",
+        "Invoice/Text institute of technology Extraction Tools (OCR Gemini, Tesseract OCR)"
+    ],
+    "hobbies": [],
+    "misc": {
+        "PROJECTS": "Printed Invoice Extractor Webapp\nAI DEVELOPER | ML, NLP, OPENCV & AGENTS\nBuilt a full-stack solution to extract structured data from invoice\nprinted and handwritten text, including integration with CSV exports and\nHackXelerate 2025 – Finalists\nfrontend app development.\nCreated an AI-powered Mental Health Support Platform for\nearly emotional support and detection.\nFlask Insurance Predictor\nShowcased teamwork and innovation before national judges.\nDeveloped a web application for insurance risk prediction utilizing Flask\nand deployed ML models, highlighting web integration with data science.\nSheHacks’25 – 1st Place (KPR Institute of Engineering & Technology)\nBuilt an impactful tech solution in a 24-hour coding marathon\nEnd-to-End ML Pipeline with MLflow\norganized by IEEE WIE.\nConstructed and tracked a full machine learning workflow using MLflow,\nHonored for creativity, collaboration, and innovation.\nillustrating pipeline management and model lifecycle best practices.\nMOBILITYX 2.0 – 1st Prize (₹20,000)\nNational-level 24-hour hackathon testing innovation and\nRetail Transactions Preprocessing and Analysis\nendurance.\nPerformed full-scale exploratory data analysis and feature engineering on\nDeveloped an AI-based Traffic solution with team AI Clashers.\nretail transactions data for insight and predictive modeling.\nStrengthened teamwork, resilience, and rapid problem-solving under\npressure.\nLeadership Role\nServing as Vice Chairman, IEEE Student Branch, Bannari Amman\nDeclaration\nInstitute of Technology\nEVENTS I (GOKUL PARTICIPATED V), declare that all the details provided above\nare true to the best of my knowledge.\nBIGBANG - THE GREAT ROTARY INNOVATION CHALLENGE 2024-JUN\nAppeared as Finalist on June 29, 2024.\nVARNAM 2025 - KARPAGAM INSTITUTE OF TECHNOLOGY 2025-FEB\nAppeared as Finalist on June 29, 2024.",
+        "CERTIFICATIONS": "images/PDFs using OCR (Tesseract), advanced regex parsing, and output\nto CSV. Demonstrates end-to-end pipeline from image processing to\nstructured export.\nPython, C, and C++ – IFC\nInfotech\nInfotech\nGenerative AI & NLTK\nWorkshop – Karpagam\nInstitute of Technology",
+        "TECH_SKILLS": "Team Collaboration\nText-to-Image Diffusion Model\nImplemented a generative AI model to convert textual prompts to images\nusing diffusion techniques, showcasing advanced deep learning, computer\ncredibility using transformer models, focused on real-world deployment\nand data integrity.",
+        "LANGUAGES": "Core Domains: Machine Learning |\nDeep Learning | Generative AI |\nEnglish\nData Science\nTamil\nAI Frameworks & Tools: YOLO |\nGNN | LLM | NLP | MCP\nJava (Basics) | C (Basics) | C++\n(Basics)\nCS Fundamentals: Data Structures\n& Algorithms (Basics)\nWeb Development: HTML | CSS |\nWordPress | Wix\nDesign & Tools: Canva | Figma |\nDate: 11-10-2025\nPlace: Sathyamangalam\nPhotoshop",
+        "PROFILE": "vision, and creative ML applications.\nText Embedding Extraction (CLIP/BERT)\nMotivated B.Tech Artificial Intelligence and Data Science student at\nDeveloped a notebook for extracting rich text features with CLIP and BERT,\nBannari Amman Institute of Technology with a strong passion for Machine\nenabling semantic search and embedding-based NLP workflows.\nLearning, Deep Learning, Generative AI, and Data Science. Dedicated to\nexploring AI-driven problem-solving, developing real-world intelligent\nFake News Detection with Transformers\nCreated an end-to-end machine learning pipeline for classifying news",
+        "EDUCATION": "Sign Language Detection\nDeveloped an AI model to detect and interpret sign language gestures\nReliance Matric Higher Secondary School, Erode (2023 – 2024)\nfrom images using deep learning, advancing accessibility and assistive\n12th Grade – 82%\ntechnology.\nBannari Amman Institute of Technology, Sathyamangalam\nAI Smart Traffic Project\nDesigned and implemented a traffic monitoring system using computer\nB.Tech – Artificial Intelligence and Data Science\n(2024 – 2028)\nvision and AI, with automated detection and smart analytics for urban\nCGPA: 7.77\nmobility solutions.\nFace Emotion Recognition (CNN)",
+        "ACHIEVEMENTS": "Engineered a convolutional neural network to classify human facial\nemotions, demonstrating advanced skill in deep learning and computer\nFIESTAA’25\nvision.\nWon a first price with cash award in paper presentation at KPR\nInvoice/Text institute of technology Extraction Tools (OCR Gemini, Tesseract OCR)"
+    }
+}

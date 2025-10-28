@@ -1,0 +1,90 @@
+{
+    "source": "data\\uploads\\resume1.pdf",
+    "metadata": {
+        "method": "pdfplumber_kmeans_zoned",
+        "detected_columns": 2
+    },
+    "personal_info": {
+        "name": "ARJUN HAREESH",
+        "contact": {
+            "email": "arjunhareeshsenthil@gmail.com",
+            "phone": "+916383876196",
+            "linkedin": "www.linkedin.com/in/arjun",
+            "github": "https://github.com/KishoreR2k7",
+            "location": "India"
+        }
+    },
+    "summary": "intelligence can transform industries and how business\nintelligence tools drive data-driven decisions. I'm excited to learn\nand apply new technologies to solve real-world problems and\ncontribute to innovations in these fields.",
+    "skills": {
+        "technical": [
+            "c ++ (basics)",
+            "c programming",
+            "data science",
+            "data strucutres",
+            "deeplearning",
+            "excel",
+            "java",
+            "java (basics)",
+            "machine learning",
+            "microsoft (excel , powerpoint)",
+            "powerpoint",
+            "python",
+            "web development"
+        ],
+        "soft": [
+            "Critical thinking",
+            "Leadership",
+            "Teamwork",
+            "Time management"
+        ]
+    },
+    "education": [
+        {
+            "institution": "M.S . Vidyalaya Matriculation school 2011 - 2024",
+            "details": "percentage :\n93 % (10 th std)\npercentage :\n90 % (12 th std)"
+        },
+        {
+            "institution": "Bannri amman institute of technology 2024 - 2026",
+            "degree": "Bachelor",
+            "field_of_study": "Artificial intelligence and data science",
+            "gpa": "8.28"
+        }
+    ],
+    "projects": {
+        "REAL_TIME_RESUME_SCORE_ANALYSER": {
+            "title": "Real time resume score analyser",
+            "description": "It analysis the real time score of a resume uploaded\nit is built using python language\nwebframeworks are streamlit and SQLlite"
+        },
+        "HAND_SIGN_PREEDICTOR": {
+            "title": "Hand sign preedictor",
+            "description": "It analysis the sign and report what it is.\nit is built using python language and YOLOv8 model\nwebframeworks are gradio and SQLlite"
+        },
+        "TEXT_GENERATOR": {
+            "title": "Text generator",
+            "description": "It generates text using a transformer model\nit is built using python language ,tennsorflow and pytorch\nwebframeworks are gradio and SQLlite"
+        },
+        "IMAGE_CLASSIFIER": {
+            "title": "Image classifier",
+            "description": "It classifies image of butterfly using CNN\nit is built using python language ,tennsorflow and pytorch\nwebframeworks are gradio and SQLlite"
+        }
+    },
+    "certifications": [
+        "Certified by Avinash Academy on C,C++,python basics",
+        "NPTEL :Buisness fundamentals for entrepeuners"
+    ],
+    "languages": [
+        "English",
+        "Tamil"
+    ],
+    "achievements": [],
+    "hobbies": [],
+    "misc": {
+        "TECH_SKILLS": "c programming\nc ++ (basics)\npython\njava (basics)\nData strucutres\nmicrosoft (excel , powerpoint)\ndata science\nmachine learning\ndeeplearning\nweb development",
+        "SOFT_SKILLS": "Teamwork\nTime Management\nLeadership\nCritical Thinking",
+        "LANGUAGES": "English\nTamil",
+        "PROFILE": "intelligence can transform industries and how business\nintelligence tools drive data-driven decisions. I'm excited to learn\nand apply new technologies to solve real-world problems and\ncontribute to innovations in these fields.",
+        "PROJECTS": "Real time resume score analyser\nIt analysis the real time score of a resume uploaded\nit is built using python language\nwebframeworks are streamlit and SQLlite\nHand sign preedictor\nIt analysis the sign and report what it is.\nit is built using python language and YOLOv8 model\nwebframeworks are gradio and SQLlite\nText generator\nIt generates text using a transformer model\nit is built using python language ,tennsorflow and pytorch\nwebframeworks are gradio and SQLlite\nImage classifier\nIt classifies image of butterfly using CNN\nit is built using python language ,tennsorflow and pytorch\nwebframeworks are gradio and SQLlite",
+        "CERTIFICATIONS": "Certified by Avinash Academy on C,C++,python basics\nNPTEL :Buisness fundamentals for entrepeuners",
+        "EDUCATION": "school : M.S . Vidyalaya Matriculation school 2011 - 2024\npercentage :\n93 % (10 th std)\npercentage :\n90 % (12 th std)\nBannri amman institute of technology 2024 - 2026\ndegree : B.TECH - Artificial intelligence and data science\ncGPA: 8.28"
+    }
+}
