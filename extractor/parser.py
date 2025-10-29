@@ -1,4 +1,4 @@
-# extractor/parser.py (Corrected and Simplified)
+# extractor/parser.py (Simple Pass-Through Parser)
 
 import json
 import glob
@@ -44,7 +44,7 @@ class Parser:
             "metadata": data.get("metadata"),
             "column_texts": data.get("column_texts"),
             "style_analysis": data.get("style_analysis"),
-            "links": data.get("links")  # <-- ADDED THIS LINE
+            "links": data.get("links")
         }
         # --- End of new logic ---
 
@@ -52,7 +52,6 @@ class Parser:
         output_path = self.output_dir / f"{Path(jsonl_path).stem}_final.json"
         try:
             with open(output_path, 'w', encoding='utf-8') as f:
-                # We save with indent=4 to make it readable
                 json.dump(final_json, f, indent=4, ensure_ascii=False)
             logger.info(f"✅ Saved final raw JSON file: {output_path}")
             return str(output_path)

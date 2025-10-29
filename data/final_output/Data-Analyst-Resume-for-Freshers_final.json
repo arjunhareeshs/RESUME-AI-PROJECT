@@ -1,0 +1,32 @@
+{
+    "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\Data-Analyst-Resume-for-Freshers.jpg",
+    "pages": 1,
+    "metadata": {
+        "method": "image_ocr",
+        "detected_columns": 2,
+        "ocr_engine": "Tesseract",
+        "image_size": "1414x2000",
+        "extraction_method_analysis": {
+            "PIL": "Image loaded with PIL",
+            "ocr": "Tesseract used for text extraction",
+            "kmeans": "K-Means used for column detection hint",
+            "column_split": "Midpoint split applied"
+        }
+    },
+    "column_texts": [
+        "Korina\nShriram\nData Analyst\nAbout Me\nAspiring Data Analyst with a strong foundation in statistical\nanalysis, data visualization, and database management.\nProficient in Excel, SQL, Python, and Tableau. Passionate about\nleveraging data-driven insights to solve complex problems\nand drive business decisions. Eager to apply my analytical\nskills and enthusiasm for data in a dynamic and growth-\noriented organization.\nWork Experience\nSinyard International Co. | Data Analyst Intern\nMay 2023- July 2023\nDuring my internship, | analyzed large datasets using SQL and Excel to identify\ntrends and patterns. | created interactive dashboards in Tableau, which improved\ndata accessibility for the marketing team. Additionally, | conducted data cleaning\nand preprocessing to ensure data integrity and accuracy.\nIngoude Company | Data Analyst Intern\nMay 2022- July 2022\n| collaborated with cross-functional teams to gather and analyze business\nrequirements. | developed and maintained automated reports using Python\nand Power BI, and assisted in A/B testing and statistical analysis to optimize\nproduct features.\nTimmerman Industries | Data Analyst Intern\nDecember 202I- January 2021\nextracted and manipulated data from various sources to support the sales\nand operations teams. Utilizing R and SQL for data analysis, | generated\nreports that identified cost-saving opportunities and designed data models to\nforecast sales performance.\nIngoude Company | Junior/Investment Analyst\nMay 202I- July 2021\n| conducted exploratory data analysis to support marketing campaigns and\nproduct development. | employed machine learning algorithms to predict\ncustomer behavior and improve targeting efforts. Additionally, | managed and\nupdated the company’s data warehouse to ensure data accuracy and\nconsistency.\nReferences\nBailey Dupont Harumi Kobayashi\nWardiere Inc. / CEO Wardiere Inc. / CEO\nPhone: 123-456-7890 Phone: 123-456-7890\nEmail: = dupont@wardiere.com Email: = harumi@wardiere.com",
+        ""
+    ],
+    "style_analysis": {
+        "bullet_points_used": "no",
+        "unwanted_icon_used": "false",
+        "font_types_used": [
+            "OCR-Default"
+        ],
+        "font_sizes_used": [
+            11.0
+        ],
+        "ocr_note": "Font information is approximate for OCR-extracted text"
+    },
+    "links": []
+}

@@ -1,4 +1,4 @@
-# main.py
+# main.py (Updated to find all supported file types)
 
 import sys
 import os
@@ -12,8 +12,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Define I/O directories
 INPUT_DIR_NAME = "data/uploads"
-DOWNLOADS_DIR_NAME = "data/downloads"       # Output from Extractor (.jsonl with style data)
-FINAL_OUTPUT_DIR_NAME = "data/final_output" # Output from Parser (final structured .json)
+DOWNLOADS_DIR_NAME = "data/downloads"       
+FINAL_OUTPUT_DIR_NAME = "data/final_output" 
 
 INPUT_DIR = PROJECT_ROOT / INPUT_DIR_NAME
 DOWNLOADS_DIR = PROJECT_ROOT / DOWNLOADS_DIR_NAME
@@ -27,7 +27,6 @@ logger = logging.getLogger("main_orchestrator")
 
 # --- Imports ---
 try:
-    # Assuming files are in an 'extractor' package structure
     from extractor.extractor import Extractor 
     from extractor.parser import Parser
     logger.info("Successfully imported Extractor and Parser modules.")
@@ -49,13 +48,22 @@ def setup_directories():
 
 
 def run_extraction_stage(input_path: Path, output_path: Path):
-    """Initializes and runs the Extractor on all PDF files."""
-    logger.info("\n--- STARTING EXTRACTION STAGE (PDF -> JSONL with Style) ---")
+    """Initializes and runs the Extractor on all supported files."""
+    logger.info("\n--- STARTING EXTRACTION STAGE (PDF/DOCX/IMG -> JSONL) ---")
     
-    input_files = glob.glob(str(input_path / "*.pdf"))
+    # --- MODIFIED: Search for all supported extensions ---
+    supported_extensions = [
+        "*.pdf", "*.docx", "*.doc", 
+        "*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff"
+    ]
+    input_files = []
+    for ext in supported_extensions:
+        # Use recursive=True if you want to search in subfolders
+        input_files.extend(glob.glob(str(input_path / ext), recursive=False))
+    # --- END OF MODIFICATION ---
     
     if not input_files:
-        logger.warning(f"No PDF files found in {input_path}. Please place your PDFs here.")
+        logger.warning(f"No supported files found in {input_path}.")
         return []
 
     extractor = Extractor(output_dir=str(output_path))
@@ -83,7 +91,7 @@ def run_parsing_stage(input_path: Path, output_path: Path):
         logger.warning(f"No .jsonl files found in {input_path}. Parsing stage skipped.")
         return
 
-    # This will now use your new, simple parser
+    # Use the simple "pass-through" parser
     parser = Parser(output_dir=str(output_path))
     
     for file in jsonl_files:
@@ -101,11 +109,10 @@ def main():
     logger.info("--- Starting Resume Processing Pipeline ---")
     setup_directories()
     
-    # 1. Extraction: PDF -> JSONL
+    # 1. Extraction: (PDF/DOCX/IMG) -> JSONL
     run_extraction_stage(INPUT_DIR, DOWNLOADS_DIR)
     
     # 2. Parsing: JSONL -> Final Structured JSON
-    # --- THIS STAGE IS NOW RE-ENABLED ---
     run_parsing_stage(DOWNLOADS_DIR, FINAL_OUTPUT_DIR)
     
     logger.info("\n--- PIPELINE EXECUTION FINISHED Successfully ---")

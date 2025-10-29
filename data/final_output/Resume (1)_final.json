@@ -4,11 +4,11 @@
     "metadata": {
         "method": "pdfplumber_midpoint_split",
         "detected_columns": 2,
-        "column_split_rationale": "The document was detected as having a two-column layout. The K-means clustering algorithm was used on the horizontal coordinates (x-coordinates) of text elements to group them into two distinct vertical zones (columns) for accurate separation and sequential reading of logical content.",
+        "column_split_rationale": "Detected column layout using K-Means hint and applied midpoint split.",
         "extraction_method_analysis": {
             "pdfplumber": "Base library used for low-level PDF text and layout extraction.",
-            "kmeans": "K-Means used to detect 2-column layout.",
-            "zoned": "Page split at vertical midpoint."
+            "kmeans": "K-Means used to detect column layout hint.",
+            "column_split": "Midpoint split applied."
         }
     },
     "column_texts": [

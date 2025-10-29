@@ -1,9 +1,9 @@
 {
-    "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\resume_converted.pdf",
-    "pages": 1,
+    "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\7376221EC293_SANJAYRAM A M  (4) - SANJAYRAM A M.docx",
+    "pages": 0,
     "metadata": {
         "method": "error",
-        "error": "ocr_error_pdfinfo_missing"
+        "error": "docx_empty"
     },
     "column_texts": [
         ""

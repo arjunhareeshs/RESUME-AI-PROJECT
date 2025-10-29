@@ -2,7 +2,8 @@
     "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\Resume.pdf",
     "pages": 1,
     "metadata": {
-        "method": "pdfplumber_empty"
+        "method": "error",
+        "error": "ocr_error_pdfinfo_missing"
     },
     "column_texts": [
         ""
