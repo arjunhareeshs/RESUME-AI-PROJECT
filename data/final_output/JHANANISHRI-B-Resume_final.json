@@ -1,138 +1,75 @@
 {
-    "source": "data\\uploads\\JHANANISHRI-B-Resume.pdf",
+    "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\JHANANISHRI-B-Resume.pdf",
+    "pages": 1,
     "metadata": {
-        "method": "pdfplumber_kmeans_zoned",
-        "detected_columns": 2
-    },
-    "personal_info": {
-        "name": null,
-        "contact": {
-            "email": null,
-            "phone": null,
-            "linkedin": "https://www.linkedin.com/in/jhananishri-b-582102354/",
-            "github": "https://github.com/Jhananishri-B",
-            "location": null,
-            "other_links": [
-                "mailto:jhananishribala@gmail.com",
-                "https://huggingface.co/JHANANISHRI-B",
-                "https://leetcode.com/u/JHANANISHRIB/",
-                "https://medium.com/@jhananishrib.ad24",
-                "https://github.com/Jhananishri-B/Model_task/blob/main/CODE.ipynb",
-                "https://github.com/Jhananishri-B/DIFFUSION2"
-            ]
+        "method": "pdfplumber_midpoint_split",
+        "detected_columns": 2,
+        "column_split_rationale": "The document was detected as having a two-column layout. The K-means clustering algorithm was used on the horizontal coordinates (x-coordinates) of text elements to group them into two distinct vertical zones (columns) for accurate separation and sequential reading of logical content.",
+        "extraction_method_analysis": {
+            "pdfplumber": "Base library used for low-level PDF text and layout extraction.",
+            "kmeans": "K-Means used to detect 2-column layout.",
+            "zoned": "Page split at vertical midpoint."
         }
     },
-    "summary": "Passionate AI and ML Enthusiast\n•\nActive Knowledge Seeker\n•\nFascinated by the World of AI\n•",
-    "skills": {
-        "technical": [
-            "courses",
-            "data science",
-            "deep learning",
-            "duration : 1 month",
-            "intelligence and data science",
-            "java",
-            "learner",
-            "machine learning",
-            "ml",
-            "problem solving",
-            "public speaking",
-            "python",
-            "second-year student pursuing artificial",
-            "ui",
-            "ui/ux",
-            "ux"
+    "column_texts": [
+        "JHANANISHRI B\njhananishribala@gmail.com\nNamakkal\n08-08-2006\nhttps://github.com/Jhananishri-B\nhttps://www.linkedin.com/in/jhananishri-b-\n582102354/\nhttps://huggingface.co/JHANANISHRI-B\nhttps://leetcode.com/u/JHANANISHRIB/\nhttps://medium.com/@jhananishrib.ad24\nPROFILE\nPassionate AI and ML Enthusiast\n•\nActive Knowledge Seeker\n•\nFascinated by the World of AI\n•\nCurrently Building Projects in AI\n•\nSKILLS\nC\nJAVA\nPYTHON\nMACHINE LEARNING\nDEEP LEARNING\nUI/UX\nPROBLEM SOLVING\nPUBLIC SPEAKING\nCOURSES\nKODACY [ML - VIRTUAL INTERNSHIP ]\nDURATION : 1 MONTH",
+        "EDUCATION\nB.TECH - ARTIFICIAL INTELLIGENCE AND\nDATA SCIENCE\nBANNARI AMMAN INSTITUTE OF\nTECHNOLOGY - ERODE\nCGPA : 8.37 (II ND SEM)\nSECOND-YEAR STUDENT PURSUING ARTIFICIAL\n•\nINTELLIGENCE AND DATA SCIENCE\nA CRITICAL THINKER AND AN ACTIVE, QUICK\n•\nLEARNER\nCURRENTLY BUILDING PROJECTS IN AI\n•\nEXPLORING THE VAST WORLD OF ARTIFICIAL\n•\nINTELLIGENCE\n12 TH STANDARD\nGREEN PARK MATRIC HIGHER SECONDARY\nSCHOOL\nNAMAKKAL\nGRADE : 82.3\n10 TH STANDARD\nSRI VIDHYA BHARATI MATRIC HIGHER\nSECONADARY SCHOOL\nSALEM\nGRADE :97.6\nPROJECTS\nML - WEATHER PREDICTION\nhttps://github.com/Jhananishri-B/Model_task\nUSED VARIOUS ML ALGORITHMS AND FOUND\nTHE BEST ALGORITHM\nDIFFUSION MODEL\nhttps://github.com/Jhananishri-B/DIFFUSION2\nUSED FORWARD DIFFUSION IN THIS PROJECT\nLANGUAGE\nPROFECIENT IN TAMIL & ENGLISH\nDECLARATION\nI HEREBY DECLARE THAT THE ABOVE\nINFORMATION FURNISHED IN THIS RESUME IS\nACCURATE AND COMPLETE TO THE BEST OF MY\nKNOWLEDGE."
+    ],
+    "style_analysis": {
+        "bullet_points_used": "yes",
+        "unwanted_icon_used": "false",
+        "font_types_used": [
+            "AbrilFatface-Regular",
+            "SourceSansPro-Bold",
+            "SourceSansPro-Regular"
         ],
-        "soft": []
+        "font_sizes_used": [
+            0.75,
+            10.99,
+            13.99,
+            27.49
+        ]
     },
-    "education": [
+    "links": [
         {
-            "institution": "BANNARI AMMAN INSTITUTE OF",
-            "gpa": "8.37",
-            "details": "TECHNOLOGY - ERODE\njhananishribala@gmail.com\nNamakkal\n08-08-2006\nhttps://github.com/Jhananishri-B\nhttps://www.linkedin.com/in/jhananishri-b-\n582102354/\nhttps://huggingface.co/JHANANISHRI-B\nhttps://leetcode.com/u/JHANANISHRIB/\nhttps://medium.com/@jhananishrib.ad24"
+            "url": "mailto:jhananishribala@gmail.com",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://github.com/Jhananishri-B",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://www.linkedin.com/in/jhananishri-b-582102354/",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://huggingface.co/JHANANISHRI-B",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://leetcode.com/u/JHANANISHRIB/",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://medium.com/@jhananishrib.ad24",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://github.com/Jhananishri-B/Model_task/blob/main/CODE.ipynb",
+            "page": 1,
+            "rect": []
+        },
+        {
+            "url": "https://github.com/Jhananishri-B/DIFFUSION2",
+            "page": 1,
+            "rect": []
         }
-    ],
-    "projects": {
-        "EXPLORING_THE_VAST_WORLD_OF_ARTIFICIAL": {
-            "title": "EXPLORING THE VAST WORLD OF ARTIFICIAL",
-            "description": "•"
-        },
-        "INTELLIGENCE": {
-            "title": "INTELLIGENCE",
-            "description": ""
-        },
-        "12_TH_STANDARD": {
-            "title": "12 TH STANDARD",
-            "description": ""
-        },
-        "GREEN_PARK_MATRIC_HIGHER_SECONDARY": {
-            "title": "GREEN PARK MATRIC HIGHER SECONDARY",
-            "description": ""
-        },
-        "SCHOOL": {
-            "title": "SCHOOL",
-            "description": ""
-        },
-        "NAMAKKAL": {
-            "title": "NAMAKKAL",
-            "description": ""
-        },
-        "GRADE_823": {
-            "title": "GRADE : 82.3",
-            "description": ""
-        },
-        "10_TH_STANDARD": {
-            "title": "10 TH STANDARD",
-            "description": ""
-        },
-        "SRI_VIDHYA_BHARATI_MATRIC_HIGHER": {
-            "title": "SRI VIDHYA BHARATI MATRIC HIGHER",
-            "description": ""
-        },
-        "SECONADARY_SCHOOL": {
-            "title": "SECONADARY SCHOOL",
-            "description": ""
-        },
-        "SALEM": {
-            "title": "SALEM",
-            "description": ""
-        },
-        "GRADE_976": {
-            "title": "GRADE :97.6",
-            "description": ""
-        },
-        "ML_WEATHER_PREDICTION": {
-            "title": "ML - WEATHER PREDICTION",
-            "description": ""
-        },
-        "HTTPSGITHUBCOMJHANANISHRI_BMODEL_TASK": {
-            "title": "https://github.com/Jhananishri-B/Model_task",
-            "description": "USED VARIOUS ML ALGORITHMS AND FOUND\nTHE BEST ALGORITHM"
-        },
-        "DIFFUSION_MODEL": {
-            "title": "DIFFUSION MODEL",
-            "description": ""
-        },
-        "HTTPSGITHUBCOMJHANANISHRI_BDIFFUSION2": {
-            "title": "https://github.com/Jhananishri-B/DIFFUSION2",
-            "description": "USED FORWARD DIFFUSION IN THIS PROJECT"
-        }
-    },
-    "certifications": [],
-    "languages": [
-        "PROFECIENT IN TAMIL & ENGLISH",
-        "DECLARATION",
-        "I HEREBY DECLARE THAT THE ABOVE",
-        "INFORMATION FURNISHED IN THIS RESUME IS",
-        "ACCURATE AND COMPLETE TO THE BEST OF MY",
-        "KNOWLEDGE."
-    ],
-    "achievements": [],
-    "hobbies": [],
-    "misc": {
-        "EDUCATION": "B.TECH - ARTIFICIAL INTELLIGENCE AND\nDATA SCIENCE\nBANNARI AMMAN INSTITUTE OF\nTECHNOLOGY - ERODE\nCGPA : 8.37 (II ND SEM)\njhananishribala@gmail.com\nNamakkal\n08-08-2006\nhttps://github.com/Jhananishri-B\nhttps://www.linkedin.com/in/jhananishri-b-\n582102354/\nhttps://huggingface.co/JHANANISHRI-B\nhttps://leetcode.com/u/JHANANISHRIB/\nhttps://medium.com/@jhananishrib.ad24",
-        "PROFILE": "Passionate AI and ML Enthusiast\n•\nActive Knowledge Seeker\n•\nFascinated by the World of AI\n•",
-        "PROJECTS": "•\n•\nEXPLORING THE VAST WORLD OF ARTIFICIAL\n•\nINTELLIGENCE\n12 TH STANDARD\nGREEN PARK MATRIC HIGHER SECONDARY\nSCHOOL\nNAMAKKAL\nGRADE : 82.3\n10 TH STANDARD\nSRI VIDHYA BHARATI MATRIC HIGHER\nSECONADARY SCHOOL\nSALEM\nGRADE :97.6\nML - WEATHER PREDICTION\nhttps://github.com/Jhananishri-B/Model_task\nUSED VARIOUS ML ALGORITHMS AND FOUND\nTHE BEST ALGORITHM\nDIFFUSION MODEL\nhttps://github.com/Jhananishri-B/DIFFUSION2\nUSED FORWARD DIFFUSION IN THIS PROJECT",
-        "TECH_SKILLS": "C\nJAVA\nPYTHON\nMACHINE LEARNING\nDEEP LEARNING\nUI/UX\nPROBLEM SOLVING\nPUBLIC SPEAKING\nCOURSES\nKODACY [ML - VIRTUAL INTERNSHIP ]\nDURATION : 1 MONTH\nCGPA : 8.37 (II ND SEM)\nSECOND-YEAR STUDENT PURSUING ARTIFICIAL\n•\nINTELLIGENCE AND DATA SCIENCE\nA CRITICAL THINKER AND AN ACTIVE, QUICK\n•\nLEARNER",
-        "LANGUAGES": "PROFECIENT IN TAMIL & ENGLISH\nDECLARATION\nI HEREBY DECLARE THAT THE ABOVE\nINFORMATION FURNISHED IN THIS RESUME IS\nACCURATE AND COMPLETE TO THE BEST OF MY\nKNOWLEDGE."
-    }
+    ]
 }

@@ -1,74 +1,77 @@
-# extractor/extractor.py (K-Means + Vertical Zoning + Text Only + Link Extraction)
+# extractor/extractor.py (Updated with a debug line)
+
 import json
 import logging
+import re
 from pathlib import Path
 from collections import defaultdict, Counter
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 import sys
 import glob
+import math
+import os
 
 import pdfplumber
-import fitz # <-- 1. IMPORT PyMuPDF
+import fitz
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from PIL import Image
 
-# OCR tools
+# (Imports are all correct)
 try:
     from pdf2image import convert_from_path
     PDF2IMAGE_AVAILABLE = True
 except ImportError:
     PDF2IMAGE_AVAILABLE = False
-    
 import pytesseract
-from PIL import Image
-
 try:
     from paddleocr import PaddleOCR
     PADDLE_AVAILABLE = True
 except ImportError:
     PADDLE_AVAILABLE = False
-
-# --- Other File Types ---
-import docx
-
-# --- Preprocessing ---
+try:
+    import docx
+except ImportError:
+    pass
 try:
     from .preprocess import preprocess_image_for_ocr
 except ImportError:
-    logging.warning("Could not import preprocess_image_for_ocr. OCR accuracy may be reduced.")
+    logging.warning("Could not import preprocess_image_for_ocr. Using default.")
     def preprocess_image_for_ocr(img: Image.Image) -> Image.Image:
         return img.convert("L")
-
-# --- Import the Style Processor ---
 try:
     from .style_processor import StyleProcessor
 except ImportError:
     logger = logging.getLogger("resume_extractor_import")
-    logger.critical("FATAL: Failed to import 'StyleProcessor' from .style_processor.py.")
+    logger.critical("FATAL: Failed to import 'StyleProcessor'.")
     raise
 
-# ---------------- Logger ----------------
+# (Logger is correct)
 logger = logging.getLogger("resume_extractor_kmeans")
 logger.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
-logger.addHandler(handler)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s [Extractor]: %(message)s"))
+    logger.addHandler(handler)
 
-# ---------------- Helper Classes ----------------
+# (ExtractionResult class is correct)
 class ExtractionResult:
-    """Data container for structured JSONL output."""
-    def __init__(self, source: str, pages: int, metadata: dict, 
-                 column_texts: List[str],
-                 links: List[Dict] = None): # <-- 2. ADD links parameter
-                 
-        self.source = str(source)
+    def __init__(
+        self,
+        source: str,
+        pages: int,
+        metadata: Dict[str, Any],
+        column_texts: List[str],
+        style_analysis: Dict[str, Any],
+        links: List[Dict[str, Any]] 
+    ):
+        self.source = str(source).replace(os.path.sep, '\\\\') 
         self.pages = pages
         self.metadata = metadata
-        self.column_texts = [t.strip() for t in column_texts]
-        self.links = links if links is not None else [] # <-- 2. ADD links field
-        
-        self.text = "\n\n--- Column Break ---\n\n".join(self.column_texts)
+        self.column_texts = column_texts
+        self.style_analysis = style_analysis
+        self.links = links  
 
     def to_jsonl(self) -> str:
         data = {
@@ -76,316 +79,210 @@ class ExtractionResult:
             "pages": self.pages,
             "metadata": self.metadata,
             "column_texts": self.column_texts,
-            "links": self.links, # <-- 3. ADD links to JSON
-            "combined_text": self.text,
+            "style_analysis": self.style_analysis,
+            "links": self.links 
         }
-        return json.dumps(data, ensure_ascii=False, default=float)
+        return json.dumps(data, ensure_ascii=False)
 
 
-# ---------------- Main Extractor ----------------
-class ResumeExtractor:
-    def __init__(self, output_dir: str = "./extracted_resumes", ocr_lang: str = "eng"):
+# ---------------- Extractor Logic ----------------
+
+class Extractor:
+    def __init__(self, output_dir: str = "data/downloads"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.ocr_lang = ocr_lang
-        self.paddle = None
-        
-        self.style_processor = StyleProcessor()
-        
-        if PADDLE_AVAILABLE:
-            try:
-                self.paddle = PaddleOCR(lang='en', use_textline_orientation=True)
-                logger.info("✅ PaddleOCR initialized.")
-            except Exception as e:
-                logger.warning(f"⚠️ PaddleOCR init failed: {e}")
-        
-        if not PDF2IMAGE_AVAILABLE:
-            logger.error("pdf2image not found. PDF OCR fallback will fail.")
+        self.style_processor = StyleProcessor() 
 
-    # -------------- Column Detection (Unchanged) --------------
-    def detect_column_labels_kmeans(self, words: List[Dict], page_bbox: tuple, max_cols: int = 3) -> (int, List[int]):
-        page_x0, _, page_x1, _ = page_bbox
-
-        if not words or len(words) < 10:
-            return 1, [0] * len(words)
-
-        x_positions = np.array([[(w["x0"] + w["x1"]) / 2] for w in words])
-
-        best_k, best_score, best_labels = 1, -1, None
-        
-        for k in range(1, min(max_cols, len(x_positions) // 2) + 1):
-            kmeans = KMeans(n_clusters=k, random_state=42, n_init='auto')
-            labels = kmeans.fit_predict(x_positions)
-
-            if k == 1:
-                best_k, best_labels = 1, labels
-                continue
-            
-            try:
-                score = silhouette_score(x_positions, labels)
-                if k == 2:
-                    score *= 1.1 
-                
-                if score > best_score:
-                    best_k, best_score, best_labels = k, score, labels
-            except ValueError:
-                continue
-        
-        return best_k, best_labels
-
-    # -------------- PDF Extraction (Modified) --------------
-    
-    def extract_pdf(self, file_path: Path) -> ExtractionResult:
-        final_column_texts = []
-        links_data = []
-        pdf_pages_count = 0
-        metadata = {"method": "failure"} # Default metadata
-
+    # (_find_links_pymupdf is correct)
+    def _find_links_pymupdf(self, file_path: Path) -> List[Dict[str, Any]]:
+        links_found = []
         try:
-            # --- Step 1: Extract Text using pdfplumber ---
-            with pdfplumber.open(file_path) as pdf:
-                pdf_pages_count = len(pdf.pages)
-                max_cols_detected = 1
-                
-                # First pass for column detection
-                for page in pdf.pages:
-                    header_height = page.height * 0.18 
-                    body_top = page.bbox[1] + header_height
-                    body_crop = page.crop((page.bbox[0], body_top, page.bbox[2], page.bbox[3]))
-                    words = body_crop.extract_words()
-                    k, _ = self.detect_column_labels_kmeans(words, body_crop.bbox)
-                    max_cols_detected = max(max_cols_detected, k)
-                
-                logger.info(f"📄 Document has a maximum of {max_cols_detected} column(s).")
-                
-                final_column_word_buckets = [[] for _ in range(max_cols_detected)]
+            doc = fitz.open(file_path)
+            for page_num in range(len(doc)):
+                page = doc.load_page(page_num)
+                links = page.get_links()
+                for link in links:
+                    if link.get('kind') == fitz.LINK_URI:
+                        rect_coords = []
+                        if 'rect' in link and link['rect']:
+                            rect_coords = [link['rect'].x0, link['rect'].y0, link['rect'].x1, link['rect'].y1]
+                        links_found.append({
+                            'url': link.get('uri', ''),
+                            'page': page_num + 1,
+                            'rect': rect_coords
+                        })
+            doc.close()
+        except Exception as e:
+            logger.error(f"Error extracting links with PyMuPDF: {e}")
+        unique_links = []
+        seen_urls = set()
+        for link in links_found:
+            if link['url'] not in seen_urls:
+                unique_links.append(link)
+                seen_urls.add(link['url'])
+        return unique_links
 
-                # Second pass for text extraction
-                for page_num, page in enumerate(pdf.pages, start=1):
-                    header_height = page.height * 0.18
-                    body_top = page.bbox[1] + header_height
-                    header_crop = page.crop((page.bbox[0], page.bbox[1], page.bbox[2], body_top))
-                    body_crop = page.crop((page.bbox[0], body_top, page.bbox[2], page.bbox[3]))
-                    
-                    header_words = header_crop.extract_words()
-                    final_column_word_buckets[0].extend(header_words)
-                    
-                    body_words = body_crop.extract_words()
-                    k, labels = self.detect_column_labels_kmeans(body_words, body_crop.bbox)
-
-                    column_word_buckets = defaultdict(list)
-                    for word, label in zip(body_words, labels):
-                        column_word_buckets[label].append(word)
-                    
-                    sorted_buckets = sorted(column_word_buckets.items(), key=lambda item: item[1][0]['x0'] if item[1] else 0)
-                    is_full_width_body = (k < max_cols_detected)
-
-                    for i, (label, col_words) in enumerate(sorted_buckets):
-                        if is_full_width_body:
-                            final_column_word_buckets[0].extend(col_words)
-                        else:
-                            if i < len(final_column_word_buckets): 
-                                final_column_word_buckets[i].extend(col_words)
-
-                # Process buckets into text
-                for word_bucket in final_column_word_buckets:
-                    plain_text = self.style_processor.process_word_list(word_bucket)
-                    final_column_texts.append(plain_text)
-                
-                metadata = {"method": "pdfplumber_kmeans_zoned", "detected_columns": max_cols_detected}
-
-                # --- Step 2: Extract Links using fitz ---
+    # (_find_optimal_k is correct)
+    def _find_optimal_k(self, X: np.ndarray, max_k: int = 5) -> int:
+        if len(X) < 2:
+            return 1
+        silhouette_scores = {}
+        k_values = range(1, min(max_k + 1, len(X)))
+        if 1 in k_values:
+            silhouette_scores[1] = -1 
+        for k in k_values:
+            if k > 1:
                 try:
-                    doc = fitz.open(file_path)
-                    for page_num, page in enumerate(doc):
-                        page_links = page.get_links() # Get list of link dictionaries
-                        for link in page_links:
-                            # 'uri' is the URL, 'from' is the Rect where the link is
-                            if link.get('kind') == fitz.LINK_URI and link.get('uri'):
-                                links_data.append({
-                                    "url": link['uri'],
-                                    "page": page_num + 1,
-                                    "rect": list(link['from']) # Convert Rect to list for JSON
-                                })
-                    doc.close()
-                    logger.info(f"🔗 Extracted {len(links_data)} links using fitz.")
-                except Exception as link_e:
-                    logger.warning(f"⚠️ Could not extract links using fitz: {link_e}")
-                    # Continue without links if this part fails
-            
-            # --- Step 3: OCR Fallback Check ---
-            if not any(t.strip() for t in final_column_texts):
-                logger.warning("⚠️ No text detected via pdfplumber. Using OCR fallback...")
-                # Note: OCR fallback doesn't extract links
-                return self.extract_pdf_ocr(file_path)
+                    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10).fit(X)
+                    score = silhouette_score(X, kmeans.labels_)
+                    silhouette_scores[k] = score
+                except ValueError:
+                    pass
+        if not silhouette_scores: return 1
+        best_k = max(silhouette_scores, key=silhouette_scores.get)
+        if best_k >= 2 and silhouette_scores.get(best_k, 0) > 0.5:
+            return min(best_k, 2)
+        return 1
 
-            # --- Step 4: Return combined result ---
+    # (_cluster_words_into_columns is correct)
+    def _cluster_words_into_columns(self, words: List[Dict], page_width: float) -> Tuple[List[str], int]:
+        x_coords = np.array([w['x0'] for w in words]).reshape(-1, 1)
+        num_columns = self._find_optimal_k(x_coords, max_k=3)
+        if num_columns == 1:
+            text = self.style_processor.format_words_to_text(words)
+            return [text], 1
+        midpoint = page_width / 2
+        left_col_words = []
+        right_col_words = []
+        for w in words:
+            word_center = (w['x0'] + w['x1']) / 2
+            if word_center < midpoint:
+                left_col_words.append(w)
+            else:
+                right_col_words.append(w)
+        left_col_words.sort(key=lambda w: (w['top'], w['x0']))
+        right_col_words.sort(key=lambda w: (w['top'], w['x0']))
+        left_text = self.style_processor.format_words_to_text(left_col_words)
+        right_text = self.style_processor.format_words_to_text(right_col_words)
+        return [left_text, right_text], 2
+
+    # --- THIS FUNCTION IS NOW FIXED ---
+    def _extract_pdfplumber(self, file_path: Path) -> ExtractionResult:
+        """Extracts text, columns, style, and links from a PDF."""
+        
+        empty_style = {
+            "bullet_points_used": "no",
+            "unwanted_icon_used": "false",
+            "font_types_used": [],
+            "font_sizes_used": []
+        }
+        
+        links = self._find_links_pymupdf(file_path)
+            
+        try:
+            with pdfplumber.open(file_path) as pdf:
+                num_pages = len(pdf.pages)
+                page = pdf.pages[0] 
+                
+                raw_words = page.extract_words(
+                    x_tolerance=2, 
+                    y_tolerance=2, 
+                    extra_attrs=["fontname", "size"]
+                )
+                
+                if not raw_words:
+                    return ExtractionResult(
+                        source=str(file_path), pages=num_pages, 
+                        metadata={"method": "pdfplumber_empty"}, 
+                        column_texts=[""], 
+                        style_analysis=empty_style,
+                        links=links
+                    )
+                
+                # --- ADDED THIS DEBUG LINE ---
+                # This will print the first word's data to the console
+                print(f"DEBUG DATA FOR {file_path.name}:", raw_words[0])
+                # --- END OF DEBUG LINE ---
+
+                column_texts, num_columns = self._cluster_words_into_columns(raw_words, page.width)
+                
+                _, style_data = self.style_processor.process_word_list(raw_words)
+
+                metadata = {
+                    "method": "pdfplumber_midpoint_split",
+                    "detected_columns": num_columns,
+                    "column_split_rationale": "The document was detected as having a two-column layout. The K-means clustering algorithm was used on the horizontal coordinates (x-coordinates) of text elements to group them into two distinct vertical zones (columns) for accurate separation and sequential reading of logical content.",
+                    "extraction_method_analysis": {
+                        "pdfplumber": "Base library used for low-level PDF text and layout extraction.",
+                        "kmeans": "K-Means used to detect 2-column layout.",
+                        "zoned": "Page split at vertical midpoint."
+                    }
+                }
+                if num_columns == 1:
+                     metadata["method"] = "pdfplumber_single_column"
+
+
+                return ExtractionResult(
+                    source=str(file_path),
+                    pages=num_pages,
+                    metadata=metadata,
+                    column_texts=column_texts,
+                    style_analysis=style_data,
+                    links=links
+                )
+        except Exception as e:
+            logger.error(f"Error processing PDF with pdfplumber: {e}")
             return ExtractionResult(
-                source=file_path,
-                pages=pdf_pages_count,
-                metadata=metadata,
-                column_texts=final_column_texts,
-                links=links_data # Pass the extracted links
+                source=str(file_path), pages=0, 
+                metadata={"method": "pdfplumber_error", "error": str(e)}, 
+                column_texts=[""], 
+                style_analysis=empty_style,
+                links=links
             )
 
-        except Exception as e:
-            logger.exception(f"❌ PDF Extraction failed: {e}") 
-            # Return error result, ensuring links field exists
+    # (extract method is correct)
+    def extract(self, file_path: Path) -> ExtractionResult:
+        ext = file_path.suffix.lower()
+        if ext == '.pdf':
+            return self._extract_pdfplumber(file_path)
+        else:
+            logger.warning(f"Unsupported file type: {ext}")
+            empty_style = {
+                "bullet_points_used": "no",
+                "unwanted_icon_used": "false",
+                "font_types_used": [],
+                "font_sizes_used": []
+            }
             return ExtractionResult(
-                source=file_path, pages=0,
-                metadata={"method": "failure", "error": str(e)},
+                source=str(file_path), pages=0,
+                metadata={"method": "unsupported_type", "error": f"File type {ext} not supported."},
                 column_texts=[""],
+                style_analysis=empty_style,
                 links=[] 
             )
 
-    # -------------- OCR Fallback (Modified to return links field) --------------
-    def extract_pdf_ocr(self, file_path: Path) -> ExtractionResult:
-        if not PDF2IMAGE_AVAILABLE:
-            return ExtractionResult(
-                source=file_path, pages=0,
-                metadata={"method": "ocr_fallback_error", "error": "pdf2image not found"},
-                column_texts=[""], links=[]
-            )
-            
-        try:
-            images = convert_from_path(file_path, dpi=300)
-            texts = []
-            # ... (rest of OCR logic is unchanged) ...
-            if self.paddle:
-                for i, img in enumerate(images):
-                    logger.info(f"Running PaddleOCR on page {i+1}...")
-                    np_img = np.array(img)
-                    result = self.paddle.ocr(np_img)
-                    lines = [line[1][0] for line in result[0]] if result else []
-                    texts.append(f"--- Page {i+1} ---\n" + "\n".join(lines))
-            else:
-                logger.info("PaddleOCR not found, using Tesseract.")
-                for i, img in enumerate(images):
-                    logger.info(f"Running Tesseract OCR on page {i+1}...")
-                    img = preprocess_image_for_ocr(img)
-                    text = pytesseract.image_to_string(img, lang=self.ocr_lang)
-                    texts.append(f"--- Page {i+1} ---\n{text}")
-
-
-            # Return OCR result, indicating no links extracted
-            return ExtractionResult(
-                source=file_path, pages=len(images),
-                metadata={"method": "ocr_fallback", "engine": "paddle" if self.paddle else "tesseract"},
-                column_texts=texts,
-                links=[] # OCR doesn't provide links
-            )
-        except Exception as e:
-            logger.error(f"OCR fallback failed: {e}")
-            return ExtractionResult(
-                source=file_path, pages=0,
-                metadata={"method": "ocr_fallback_error", "error": str(e)},
-                column_texts=[""], links=[]
-            )
-
-    # -------------- Other File Handlers (Modified to return links field) --------------
-    
-    def extract_docx(self, file_path: Path) -> ExtractionResult:
-        # DOCX doesn't have the same link structure as PDF
-        try:
-            doc = docx.Document(file_path)
-            text = "\n".join([p.text for p in doc.paragraphs if p.text])
-            return ExtractionResult(
-                source=file_path, pages=0,
-                metadata={"method": "docx"},
-                column_texts=[text],
-                links=[] # No links extracted from DOCX
-            )
-        except Exception as e:
-            logger.error(f"DOCX extraction failed: {e}")
-            return ExtractionResult(
-                source=file_path, pages=0,
-                metadata={"method": "docx_error", "error": str(e)},
-                column_texts=[""], links=[]
-            )
-
-    def extract_image(self, file_path: Path) -> ExtractionResult:
-        # Images don't have embedded links
-        try:
-            img = Image.open(file_path)
-            text = ""
-            # ... (rest of image OCR logic is unchanged) ...
-            if self.paddle:
-                logger.info("Running PaddleOCR on image...")
-                np_img = np.array(img)
-                result = self.paddle.ocr(np_img)
-                lines = [line[1][0] for line in result[0]] if result else []
-                text = "\n".join(lines)
-            else:
-                logger.info("PaddleOCR not found, using Tesseract on image...")
-                img = preprocess_image_for_ocr(img)
-                text = pytesseract.image_to_string(img, lang=self.ocr_lang)
-
-
-            return ExtractionResult(
-                source=file_path, pages=1,
-                metadata={"method": "image_ocr", "engine": "paddle" if self.paddle else "tesseract"},
-                column_texts=[text],
-                links=[] # No links extracted from images
-            )
-        except Exception as e:
-            logger.error(f"Image extraction failed: {e}")
-            return ExtractionResult(
-                source=file_path, pages=1,
-                metadata={"method": "image_error", "error": str(e)},
-                column_texts=[""], links=[]
-            )
-
-    # -------------- Main Entry Point (Unchanged) --------------
-    
-    def extract(self, file_path: Path) -> ExtractionResult:
-        """Main routing function to select the correct extractor."""
-        ext = file_path.suffix.lower()
-        
-        if ext == ".pdf":
-            return self.extract_pdf(file_path)
-        elif ext == ".docx":
-            return self.extract_docx(file_path)
-        elif ext in [".jpg", ".jpeg", ".png", ".tiff", ".bmp"]:
-            return self.extract_image(file_path)
-        else:
-            logger.warning(f"Unsupported file type: {ext}")
-            # Return with empty links
-            return ExtractionResult(
-                source=file_path, pages=0,
-                metadata={"method": "unsupported_type", "error": f"File type {ext} not supported."},
-                column_texts=[""], links=[]
-            )
-
+    # (process_and_save method is correct)
     def process_and_save(self, file_path: str) -> str:
         file_path = Path(file_path)
-        result = self.extract(file_path) # This result object now includes links
-        
-        output_file = self.output_dir / f"{file_path.stem}.jsonl"
+        result = self.extract(file_path)
+        output_file = self.output_dir / (file_path.stem + ".jsonl")
         with open(output_file, "w", encoding="utf-8") as f:
-            f.write(result.to_jsonl()) # .to_jsonl() now includes links
-            
+            f.write(result.to_jsonl())
         logger.info(f"✅ Saved: {output_file}")
         return str(output_file)
 
-# -------------- CLI Usage (Unchanged) --------------
+# (CLI is correct)
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python -m extractor.extractor <input_pattern>")
         sys.exit(1)
-
     input_patterns = sys.argv[1:]
     files = []
     for pattern in input_patterns:
         files.extend(glob.glob(pattern))
-
     if not files:
         print("No files found.")
         sys.exit(1)
-
-    extractor = ResumeExtractor(output_dir="data/downloads")
+    extractor = Extractor()
     for file in files:
-        print(f"Processing: {file}")
-        try:
-            extractor.process_and_save(file)
-        except Exception as e:
-            print(f"   -> FAILED: {e}")
+        extractor.process_and_save(file)

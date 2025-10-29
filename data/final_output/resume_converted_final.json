@@ -1,28 +1,17 @@
 {
-    "source": "data\\uploads\\resume_converted.pdf",
+    "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\resume_converted.pdf",
+    "pages": 1,
     "metadata": {
-        "method": "ocr_fallback_error",
-        "error": "Unable to get page count. Is poppler installed and in PATH?"
+        "method": "pdfplumber_empty"
     },
-    "personal_info": {
-        "name": null,
-        "contact": {
-            "email": null,
-            "phone": null,
-            "linkedin": null,
-            "github": null,
-            "location": null
-        }
+    "column_texts": [
+        ""
+    ],
+    "style_analysis": {
+        "bullet_points_used": "no",
+        "unwanted_icon_used": "false",
+        "font_types_used": [],
+        "font_sizes_used": []
     },
-    "summary": null,
-    "skills": {
-        "technical": [],
-        "soft": []
-    },
-    "education": [],
-    "projects": {},
-    "certifications": [],
-    "languages": [],
-    "achievements": [],
-    "hobbies": []
+    "links": []
 }

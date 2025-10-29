@@ -1,1 +1,1 @@
-{"source": "data\\uploads\\Resume.pdf", "pages": 0, "metadata": {"method": "ocr_fallback_error", "error": "Unable to get page count. Is poppler installed and in PATH?"}, "column_texts": [""], "links": [], "combined_text": ""}
+{"source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\Resume.pdf", "pages": 1, "metadata": {"method": "pdfplumber_empty"}, "column_texts": [""], "style_analysis": {"bullet_points_used": "no", "unwanted_icon_used": "false", "font_types_used": [], "font_sizes_used": []}, "links": []}

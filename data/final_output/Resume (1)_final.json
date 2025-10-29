@@ -1,62 +1,42 @@
 {
-    "source": "data\\uploads\\Resume (1).pdf",
+    "source": "C:\\\\RESUME-AI-PROJECT\\\\data\\\\uploads\\\\Resume (1).pdf",
+    "pages": 1,
     "metadata": {
-        "method": "pdfplumber_kmeans_zoned",
-        "detected_columns": 2
-    },
-    "personal_info": {
-        "name": null,
-        "contact": {
-            "email": "gavuthaman27@gmail.com",
-            "phone": "8012699843",
-            "linkedin": null,
-            "github": "https://github.com/gavuth",
-            "location": "Nilakkottai"
+        "method": "pdfplumber_midpoint_split",
+        "detected_columns": 2,
+        "column_split_rationale": "The document was detected as having a two-column layout. The K-means clustering algorithm was used on the horizontal coordinates (x-coordinates) of text elements to group them into two distinct vertical zones (columns) for accurate separation and sequential reading of logical content.",
+        "extraction_method_analysis": {
+            "pdfplumber": "Base library used for low-level PDF text and layout extraction.",
+            "kmeans": "K-Means used to detect 2-column layout.",
+            "zoned": "Page split at vertical midpoint."
         }
     },
-    "summary": "I am a proactive, organized and\nresponsible person, with good\ninterpersonal relationships.\nI stand out for good teamwork, quick\ndecision-making and good pressure\nmanagement. I am looking for a\nchallenging position to keep learning.",
-    "skills": {
-        "technical": [
-            "analytical thinking",
-            "c programming",
-            "figma"
+    "column_texts": [
+        "ABOUT ME\nI am a proactive, organized and\nresponsible person, with good\n-\ninterpersonal relationships.\nI stand out for good teamwork, quick\ndecision-making and good pressure\nmanagement. I am looking for a\nchallenging position to keep learning.\nHOBBIES\nSPORTS\nREADING BOOKS\nCONTACT\ngavuthaman27@gmail.com\n8012699843\n4-3-5A,Mahalingam Kovil\nStreet,Nilakkottai,Dindigul.\nhttps://www.linkedin.com\n/in/gavutham-d-\n465a98325\nhttps://github.com/gavuth\nam-d",
+        "GAVUTHAM D\nBE - CSE 1st Year\nEDUCATION\nBannari Amman Institute of Technolgy\nSathyamangalam\n1st Sem - 8.05 CGPA\nCheran Vidyalaya Mat Hr.Sec School -\nDindigul.\nHSC - 89.16% (2024)\nSSLC - 92.4% (2022)\nLANGUAGE\nTamil - Native\nEnglish - Proficiency\nSKILLS\nC Programming\nFigma\nAnalytical Thinking\nACHIEVEMENTS\nCompleted DCA Course at CSC.\nSecured 2nd Prize in BIT\nHACKATHON.\nCompleted Typewritting in English"
+    ],
+    "style_analysis": {
+        "bullet_points_used": "yes",
+        "unwanted_icon_used": "false",
+        "font_types_used": [
+            "Inter-Bold",
+            "Inter-Regular",
+            "TimesNRMTPro-Bold"
         ],
-        "soft": []
+        "font_sizes_used": [
+            10.5,
+            10.8,
+            10.99,
+            11.0,
+            12.0,
+            13.99,
+            14.96,
+            15.14,
+            15.54,
+            17.5,
+            17.53,
+            33.7
+        ]
     },
-    "education": [
-        {
-            "institution": "Bannari Amman Institute of Technolgy",
-            "details": "- Sathyamangalam\n1st Sem - 8.05 CGPA"
-        },
-        {
-            "institution": "Cheran Vidyalaya Mat Hr.Sec School -",
-            "degree": "12th Grade / HSC",
-            "field_of_study": "89",
-            "details": "Dindigul.\nSSLC - 92.4% (2022)"
-        }
-    ],
-    "projects": {},
-    "certifications": [],
-    "languages": [
-        "Tamil - Native",
-        "English - Proficiency"
-    ],
-    "achievements": [
-        "Completed DCA Course at CSC.",
-        "Secured 2nd Prize in BIT",
-        "HACKATHON.",
-        "Completed Typewritting in English"
-    ],
-    "hobbies": [
-        "SPORTS",
-        "READING BOOKS"
-    ],
-    "misc": {
-        "PROFILE": "I am a proactive, organized and\nresponsible person, with good\ninterpersonal relationships.\nI stand out for good teamwork, quick\ndecision-making and good pressure\nmanagement. I am looking for a\nchallenging position to keep learning.",
-        "HOBBIES": "SPORTS\nREADING BOOKS",
-        "EDUCATION": "Bannari Amman Institute of Technolgy\n- Sathyamangalam\n1st Sem - 8.05 CGPA\nCheran Vidyalaya Mat Hr.Sec School -\nDindigul.\nHSC - 89.16% (2024)\nSSLC - 92.4% (2022)",
-        "LANGUAGES": "Tamil - Native\nEnglish - Proficiency",
-        "TECH_SKILLS": "C Programming\nFigma\nAnalytical Thinking",
-        "ACHIEVEMENTS": "Completed DCA Course at CSC.\nSecured 2nd Prize in BIT\nHACKATHON.\nCompleted Typewritting in English"
-    }
+    "links": []
 }

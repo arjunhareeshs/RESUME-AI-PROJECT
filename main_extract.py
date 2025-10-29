@@ -1,105 +1,115 @@
-# main.py (Updated for 2-step pipeline with Enhanced Parser)
-import sys
-import glob
-import logging
-from pathlib import Path
+# main.py
 
-# Import the classes from your other files
+import sys
+import os
+import glob
+from pathlib import Path
+import logging
+
+# --- Configuration & Logging Setup ---
+PROJECT_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+# Define I/O directories
+INPUT_DIR_NAME = "data/uploads"
+DOWNLOADS_DIR_NAME = "data/downloads"       # Output from Extractor (.jsonl with style data)
+FINAL_OUTPUT_DIR_NAME = "data/final_output" # Output from Parser (final structured .json)
+
+INPUT_DIR = PROJECT_ROOT / INPUT_DIR_NAME
+DOWNLOADS_DIR = PROJECT_ROOT / DOWNLOADS_DIR_NAME
+FINAL_OUTPUT_DIR = PROJECT_ROOT / FINAL_OUTPUT_DIR_NAME
+
+# Set up logging for main script
+logging.basicConfig(level=logging.INFO, 
+                    format="%(asctime)s - %(levelname)s - [MAIN]: %(message)s")
+logger = logging.getLogger("main_orchestrator")
+
+
+# --- Imports ---
 try:
-    from extractor.extractor import ResumeExtractor
-    # Import the enhanced parser
-    from extractor.parser import SemanticParser
+    # Assuming files are in an 'extractor' package structure
+    from extractor.extractor import Extractor 
+    from extractor.parser import Parser
+    logger.info("Successfully imported Extractor and Parser modules.")
 except ImportError as e:
-    print(f"FATAL: Failed to import necessary modules: {e}")
-    print("Please ensure extractor/extractor.py and extractor/parser.py exist.")
+    logger.error(f"FATAL: Failed to import modules: {e}")
+    logger.error("Ensure 'extractor' directory is set up with all necessary files and __init__.py.")
     sys.exit(1)
 
-# ---------------- Logger ----------------
-logger = logging.getLogger("main_pipeline")
-logger.setLevel(logging.INFO)
-# Prevent duplicate handlers
-if not logger.handlers:
-    handler = logging.StreamHandler()
-    handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s"))
-    logger.addHandler(handler)
+
+# --- Pipeline Functions ---
+
+def setup_directories():
+    """Ensures all necessary data directories exist."""
+    logger.info("Setting up directories...")
+    INPUT_DIR.mkdir(parents=True, exist_ok=True)
+    DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)
+    FINAL_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Input/Output directories ensured: {INPUT_DIR}, {DOWNLOADS_DIR}, {FINAL_OUTPUT_DIR}")
 
 
-def run_pipeline(input_patterns: list, extractor_output_dir: str, final_parser_output_dir: str):
-    """
-    Runs the full 2-step extraction and detailed parsing pipeline.
-    """
-
-    # 1. Find all input files
-    input_files = []
-    for pattern in input_patterns:
-        files_found = glob.glob(str(pattern))
-        if not files_found:
-            logger.warning(f"No files found for pattern: {pattern}. Skipping.")
-        else:
-            input_files.extend(files_found)
-
+def run_extraction_stage(input_path: Path, output_path: Path):
+    """Initializes and runs the Extractor on all PDF files."""
+    logger.info("\n--- STARTING EXTRACTION STAGE (PDF -> JSONL with Style) ---")
+    
+    input_files = glob.glob(str(input_path / "*.pdf"))
+    
     if not input_files:
-        logger.error("No valid input files found to process.")
-        sys.exit(1)
+        logger.warning(f"No PDF files found in {input_path}. Please place your PDFs here.")
+        return []
 
-    logger.info(f"Found {len(input_files)} files to process.")
-
-    # 2. Initialize Extractor and the Enhanced Parser
-    try:
-        extractor = ResumeExtractor(output_dir=extractor_output_dir)
-        # The enhanced parser now saves to the final directory
-        parser = SemanticParser(output_dir=final_parser_output_dir)
-    except Exception as e:
-        logger.critical(f"Failed to initialize extractor or parser: {e}")
-        sys.exit(1)
-
-    # 3. Run the two-step process for each file
-    for file_path in input_files:
-        logger.info(f"--- Processing: {file_path} ---")
-
-        saved_jsonl_path = None
-        final_json_path = None
-
+    extractor = Extractor(output_dir=str(output_path))
+    processed_files = []
+    
+    for file in input_files:
+        logger.info(f"Processing file: {Path(file).name}")
         try:
-            # --- Step 1: Run Extractor ---
-            logger.info("Step 1: Extracting raw data...")
-            saved_jsonl_path = extractor.process_and_save(file_path)
-            if not saved_jsonl_path: raise Exception("Extractor failed to save JSONL.")
-            logger.info(f" -> Raw extraction saved to: {saved_jsonl_path}")
-
-            # --- Step 2: Run Enhanced Parser ---
-            logger.info("Step 2: Parsing details and saving final JSON...")
-            final_json_path = parser.parse_file(saved_jsonl_path)
-            if not final_json_path: raise Exception("Parser failed to save final JSON.")
-            logger.info(f" -> Final structured JSON saved to: {final_json_path}")
-            logger.info(" -> Processing complete.")
-
+            output_jsonl_path = extractor.process_and_save(file)
+            processed_files.append(output_jsonl_path)
         except Exception as e:
-            logger.error(f"   -> FAILED to process {file_path}: {e}")
-            logger.exception(f"Full error for {file_path}:")
+            logger.error(f"Critical error during extraction of {file}: {e}")
+            
+    logger.info("--- EXTRACTION STAGE COMPLETE ---")
+    return processed_files
 
 
-# -------------- CLI Usage --------------
+def run_parsing_stage(input_path: Path, output_path: Path):
+    """Initializes and runs the Parser on all .jsonl files."""
+    logger.info("\n--- STARTING PARSING STAGE (JSONL -> Final Structured JSON) ---")
+    
+    jsonl_files = glob.glob(str(input_path / "*.jsonl"))
+    
+    if not jsonl_files:
+        logger.warning(f"No .jsonl files found in {input_path}. Parsing stage skipped.")
+        return
+
+    # This will now use your new, simple parser
+    parser = Parser(output_dir=str(output_path))
+    
+    for file in jsonl_files:
+        logger.info(f"Parsing file: {Path(file).name}")
+        try:
+            parser.parse_jsonl_file(file)
+        except Exception as e:
+            logger.error(f"Critical error during parsing of {file}: {e}")
+            
+    logger.info("--- PARSING STAGE COMPLETE ---")
+
+
+def main():
+    """Main execution entry point for the resume processing pipeline."""
+    logger.info("--- Starting Resume Processing Pipeline ---")
+    setup_directories()
+    
+    # 1. Extraction: PDF -> JSONL
+    run_extraction_stage(INPUT_DIR, DOWNLOADS_DIR)
+    
+    # 2. Parsing: JSONL -> Final Structured JSON
+    # --- THIS STAGE IS NOW RE-ENABLED ---
+    run_parsing_stage(DOWNLOADS_DIR, FINAL_OUTPUT_DIR)
+    
+    logger.info("\n--- PIPELINE EXECUTION FINISHED Successfully ---")
+
+
 if __name__ == "__main__":
-
-    # --- Configuration ---
-    SCRIPT_PATH = Path(__file__).resolve()
-    PROJECT_ROOT = SCRIPT_PATH.parent
-
-    DEFAULT_INPUT_DIR = PROJECT_ROOT / "data" / "uploads" / "*"
-    DEFAULT_EXTRACTOR_OUTPUT_DIR = PROJECT_ROOT / "data" / "downloads" # Intermediate JSONL
-    DEFAULT_FINAL_OUTPUT_DIR = PROJECT_ROOT / "data" / "final_output" # Final JSON
-
-    if len(sys.argv) > 1:
-        patterns = sys.argv[1:]
-    else:
-        patterns = [DEFAULT_INPUT_DIR]
-        logger.info(f"No input pattern provided. Using default: {DEFAULT_INPUT_DIR}")
-
-    run_pipeline(
-        input_patterns=patterns,
-        extractor_output_dir=str(DEFAULT_EXTRACTOR_OUTPUT_DIR),
-        final_parser_output_dir=str(DEFAULT_FINAL_OUTPUT_DIR)
-    )
-
-    logger.info("--- Pipeline finished ---")
+    main()
